@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
 
-public class Login implements Screen {
+public class SignUp implements Screen {
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private Viewport viewport;
@@ -36,7 +36,7 @@ public class Login implements Screen {
 
     private Main main;
 
-    public Login(Main main) {
+    public SignUp(Main main) {
         this.main = main;
     }
 
@@ -46,7 +46,7 @@ public class Login implements Screen {
         viewport = new StretchViewport(1920,1000,camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
-        background = new Texture("ui/loginPage.png");
+        background = new Texture("ui/signupPage.png");
         TextureRegion inputTemplate = new TextureRegion(new Texture("ui/inputTemplate.png"),720,82);
         font = new BitmapFont(Gdx.files.internal("font/b.fnt"));
         font.setColor(0, 0, 0, 1);

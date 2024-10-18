@@ -3,7 +3,6 @@ package com.sampleproject.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Rectangle;
-import com.sampleproject.screen.Login;
 
 public class TouchInputHandler implements InputProcessor {
     private Rectangle imageBounds;
@@ -20,7 +19,7 @@ public class TouchInputHandler implements InputProcessor {
 
         if (imageBounds.contains(screenX, flippedY)) {
 
-            Login.processTextInput();
+            //Login.processTextInput();
 
             return true;
         }
