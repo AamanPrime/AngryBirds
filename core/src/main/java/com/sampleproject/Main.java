@@ -10,7 +10,7 @@ public class Main extends Game {
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        setScreen(new Level1());
+        setScreen(new StartingPage(this));
     }
 
 }

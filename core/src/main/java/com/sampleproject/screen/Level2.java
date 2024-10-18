@@ -27,7 +27,7 @@ import com.sampleproject.model.*;
 
 import java.util.logging.SocketHandler;
 
-public class Level1 implements Screen, InputProcessor {
+public class Level2 implements Screen, InputProcessor {
 
     private World world;
     private SpriteBatch batch;
@@ -66,7 +66,7 @@ public class Level1 implements Screen, InputProcessor {
     BlueBird blueBird;
     BlackBird blackBird;
     private Main main;
-    public Level1(Main main) {
+    public Level2(Main main) {
         this.main = main;
     }
 
@@ -174,7 +174,7 @@ public class Level1 implements Screen, InputProcessor {
         restart.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new Level1(main));
+                main.setScreen(new Level2(main));
                 return false;
             }
         });
@@ -385,14 +385,14 @@ public class Level1 implements Screen, InputProcessor {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
 
-            if (isDragging) {
-                float deltaX = Math.abs(screenX - ellipseCenter.x);
-                float deltaY = Math.abs(screenY - ellipseCenter.y);
-                width = deltaX + 50;
-                height = 20;
+        if (isDragging) {
+            float deltaX = Math.abs(screenX - ellipseCenter.x);
+            float deltaY = Math.abs(screenY - ellipseCenter.y);
+            width = deltaX + 50;
+            height = 20;
 
-                System.out.println("Dragged: " + deltaX + " " + deltaY);
-            }
+            System.out.println("Dragged: " + deltaX + " " + deltaY);
+        }
 
 
 

@@ -31,6 +31,10 @@ public class Levels implements Screen {
         this.homeScreen = homeScreen;
     }
 
+    public Levels(Main main) {
+        this.main = main;
+    }
+
     @Override
     public void show() {
         camera = new OrthographicCamera();
@@ -46,7 +50,12 @@ public class Levels implements Screen {
         backicon.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-               main.setScreen(homeScreen);
+                if (homeScreen != null) {
+                    main.setScreen(homeScreen);
+                }
+                else {
+                    main.setScreen(new HomeScreen(main));
+                }
                return false;
             }
             @Override
@@ -67,18 +76,33 @@ public class Levels implements Screen {
         });
 
 
-        Image level1 = new LevelIcon(stage).addLevel(150,400,0,1);
-        Image level2 = new LevelIcon(stage).addLevel(650,400,0,2);
-        Image level3 = new LevelIcon(stage).addLevel(1050,400,0,3);
-        Image level4 = new LevelIcon(stage).addLevel(1550,400,0,4);
+        Image level1 = new LevelIcon(stage).addLevel(320,400,0,1);
+        Image level2 = new LevelIcon(stage).addLevel(820,400,0,2);
+        Image level3 = new LevelIcon(stage).addLevel(1320,400,0,3);
+
 
         level1.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new Level1());
+                main.setScreen(new Level1(main));
                 return true;
             }
         });
+        level2.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                main.setScreen(new Level2(main));
+                return true;
+            }
+        });
+        level3.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                main.setScreen(new Level3(main));
+                return true;
+            }
+        });
+
         stage.addActor(backicon);
         Gdx.input.setInputProcessor(stage);
 

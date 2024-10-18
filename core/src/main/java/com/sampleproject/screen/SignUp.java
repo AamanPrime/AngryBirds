@@ -11,7 +11,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -30,7 +34,7 @@ public class SignUp implements Screen {
     private TextField username;
     private TextField password;
 
-
+    private HomeScreen homeScreen;
 
 
 
@@ -40,6 +44,10 @@ public class SignUp implements Screen {
         this.main = main;
     }
 
+    public SignUp(Main main,HomeScreen homeScreen) {
+        this.main = main;
+        this.homeScreen = homeScreen;
+    }
     @Override
     public void show() {
         camera = new OrthographicCamera();
@@ -74,10 +82,52 @@ public class SignUp implements Screen {
         loginButton.setPosition(748,200);
         loginButton.setSize(460,106);
 
+        Image backbutton = new Image(new Texture("ui/back.png"));
+        backbutton.setPosition(50,50);
+        backbutton.setSize(100,100);
+        loginButton.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                loginButton.addAction(Actions.sequence(Actions.scaleTo(1.01f,1.01f,0.2f)));
+            }
 
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                loginButton.addAction(Actions.sequence(Actions.scaleTo(1f,1f,0.2f)));
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                main.setScreen(new HomeScreen(main));
+                return false;
+            }
+        });
+
+        backbutton.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                backbutton.addAction(Actions.sequence(Actions.scaleTo(1.01f,1.01f,0.2f)));
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                backbutton.addAction(Actions.sequence(Actions.scaleTo(1f,1f,0.2f)));
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (homeScreen == null) {
+                    main.setScreen(new StartingPage(main));
+                }
+                else {
+                    main.setScreen(new  HomeScreen(main));
+                }
+                return false;
+            }
+        });
+        
         stage.addActor(username);
         stage.addActor(password);
         stage.addActor(loginButton);
+        stage.addActor(backbutton);
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
 

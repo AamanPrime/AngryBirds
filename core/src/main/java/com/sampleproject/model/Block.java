@@ -2,6 +2,9 @@ package com.sampleproject.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,9 +17,13 @@ public class Block {
     private int health = 100;
     private Image rectangle;
     private int orientation;
-    public Block(Stage stage,int orientation) {
+    private World world;
+    private Body blockBody;
+
+    public Block(Stage stage,int orientation, World world) {
         this.stage = stage;
         this.orientation = orientation;
+        this.world = world;
     }
 
     public int getHealth() {
@@ -28,6 +35,31 @@ public class Block {
     //0 -> Horizontal
     //1 -> Vertical
     public void addBlock(float x, float y, float width, float height) {
+
+        BodyDef blockbodyDef = new BodyDef();
+        if (orientation == 2) {
+            blockbodyDef.type = BodyDef.BodyType.StaticBody;
+        }
+        else {
+            blockbodyDef.type = BodyDef.BodyType.DynamicBody;
+        }
+        blockbodyDef.position.set(x+width/2, y+height/2);
+        blockBody = world.createBody(blockbodyDef);
+
+        PolygonShape blockShape = new PolygonShape();
+        blockShape.setAsBox(width/2, height/2);
+        blockBody.createFixture(blockShape, 0f); // Static bodies don't need density
+
+        FixtureDef groundFixtureDef = new FixtureDef();
+        groundFixtureDef.shape = blockShape;
+        groundFixtureDef.isSensor = false; // Ensure it's not a sensor
+        groundFixtureDef.friction = 0.0f; // Adjust friction as necessary
+        groundFixtureDef.restitution = 0f; // Bounciness, set to 0 for no bounce
+
+        blockBody.createFixture(groundFixtureDef);
+
+        blockShape.dispose();
+
         if (orientation == 0) {
             if (health >= 20) {
                 addNewHorizontalBlock(x,y,width,height);
@@ -86,6 +118,9 @@ public class Block {
                 System.out.println(health);
                 if (health <= 0) {
                     rectangle.remove();
+
+                    world.destroyBody(blockBody);
+
                 }
                 else {
                     if (orientation == 0) {
@@ -98,6 +133,15 @@ public class Block {
                 return true;
             }
         });
+    }
+    public void updateImagePositionFromBody() {
+
+        Vector2 bodyPosition = blockBody.getPosition();
+        float imageX = bodyPosition.x;
+        float imageY = bodyPosition.y;
+
+        rectangle.setPosition(imageX-rectangle.getWidth()/2, imageY-rectangle.getHeight()/2);
+        rectangle.setRotation(blockBody.getAngle() * MathUtils.radiansToDegrees);
     }
 
 

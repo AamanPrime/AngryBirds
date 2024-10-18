@@ -47,7 +47,7 @@ public class HomeScreen implements Screen {
         setting.setPosition(50,30);
         setting.setScale(0.5f);
         continueImage.setScale(1f);
-        continueImage.setPosition(750,500);
+        continueImage.setPosition(765,500);
         selectlevel.setPosition(700,350);
         selectlevel.setScale(1f);
         close.setPosition(1800,30);
@@ -102,8 +102,83 @@ public class HomeScreen implements Screen {
                 return true;
             }
         });
-
-
+        HomeScreen homeScreen = this;
+        login.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                login.addAction(Actions.sequence(
+                    Actions.scaleTo(0.55f,0.55f,0.2f)
+                ));
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                login.addAction(Actions.sequence(
+                    Actions.scaleTo(0.5f,0.5f,0.2f)
+                ));
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                main.setScreen(new Login(main,homeScreen));
+                return true;
+            }
+        });
+        signup.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                signup.addAction(Actions.sequence(
+                    Actions.scaleTo(0.55f,0.55f,0.2f)
+                ));
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                signup.addAction(Actions.sequence(
+                    Actions.scaleTo(0.5f,0.5f,0.2f)
+                ));
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                main.setScreen(new SignUp(main,homeScreen));
+                return true;
+            }
+        });
+        continueImage.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                continueImage.addAction(Actions.sequence(
+                    Actions.scaleTo(1.01f,1.01f,0.2f)
+                ));
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                continueImage.addAction(Actions.sequence(
+                    Actions.scaleTo(1f,1f,0.2f)
+                ));
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                main.setScreen(new Levels(main,homeScreen));
+                return true;
+            }
+        });
+        selectlevel.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                selectlevel.addAction(Actions.sequence(
+                    Actions.scaleTo(1.01f,1.01f,0.2f)
+                ));
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                selectlevel.addAction(Actions.sequence(
+                    Actions.scaleTo(1f,1f,0.2f)
+                ));
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                main.setScreen(new Levels(main,homeScreen));
+                return true;
+            }
+        });
         stage.addActor(continueImage);
         stage.addActor(selectlevel);
         stage.addActor(setting);
