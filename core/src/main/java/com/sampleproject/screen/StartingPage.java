@@ -2,6 +2,7 @@ package com.sampleproject.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,6 +23,7 @@ public class StartingPage implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
     private Stage stage;
+    private Music backgroundMusic;
     private static Main main;
 
     public StartingPage(Main main) {
@@ -38,8 +40,12 @@ public class StartingPage implements Screen {
         Image loginbutton  = new Image(new Texture("ui/loginbutton.png"));
         Image signupbutton  = new Image(new Texture("ui/signupbutton.png"));
         Image playbutton  = new Image(new Texture("ui/playbutton.png"));
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/song.mp3"));
+        backgroundMusic.setLooping(true);
+        backgroundMusic.play();
+        backgroundMusic.setVolume(0.5f);
         loginbutton.setPosition(50,80);
-        signupbutton.setPosition(1425,80);
+        signupbutton.setPosition(1575,80);
         playbutton.setPosition(800,80);
         playbutton.setScale(0.5f);
         loginbutton.setScale(1f);
@@ -64,6 +70,7 @@ public class StartingPage implements Screen {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 main.setScreen(new Login(main));
                 return false;
             }
@@ -89,6 +96,7 @@ public class StartingPage implements Screen {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 main.setScreen(new SignUp(main));
                 return false;
             }
@@ -108,6 +116,7 @@ public class StartingPage implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 main.setScreen(new HomeScreen(main));
                 return true;
             }

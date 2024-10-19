@@ -2,6 +2,7 @@ package com.sampleproject.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,7 +26,7 @@ public class Levels implements Screen {
     private Texture background;
     private Main main;
     private HomeScreen homeScreen;
-
+    private Music backgroundMusic;
     public Levels(Main main, HomeScreen homeScreen) {
         this.main = main;
         this.homeScreen = homeScreen;
@@ -84,6 +85,7 @@ public class Levels implements Screen {
         level1.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
                 main.setScreen(new Level1(main));
                 return true;
             }
