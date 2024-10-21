@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -66,6 +67,7 @@ public class Level3 implements Screen, InputProcessor {
     BlueBird blueBird;
     BlackBird blackBird;
     private Main main;
+    private Music backgroundMusic;
     public Level3(Main main) {
         this.main = main;
     }
@@ -94,10 +96,16 @@ public class Level3 implements Screen, InputProcessor {
         pause.setPosition(20, 900);
         pause.setScale(0.5f);
 
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/game.wav"));
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.5f);
+        backgroundMusic.play();
+
+
         musicoff.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+                backgroundMusic.play();
                 musicoff.setVisible(false);
 
                 musicon.setVisible(true);
@@ -108,7 +116,7 @@ public class Level3 implements Screen, InputProcessor {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-
+                backgroundMusic.stop();
                 musicon.setVisible(false);
                 musicoff.setVisible(true);
 
@@ -143,6 +151,7 @@ public class Level3 implements Screen, InputProcessor {
         play.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.play();
                 play.setVisible(false);
                 soundoff.setVisible(false);
                 soundon.setVisible(false);
@@ -158,6 +167,7 @@ public class Level3 implements Screen, InputProcessor {
         pause.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 play.setVisible(true);
 
                 soundon.setVisible(!false);
@@ -266,6 +276,8 @@ public class Level3 implements Screen, InputProcessor {
         yellowBird.getBirds(100,105);
         blackBird = new BlackBird(stage);
         blackBird.getBirds(50,105);
+        Catapult catapult = new Catapult(stage);
+        catapult.getCatapult();
 
         Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
@@ -287,7 +299,7 @@ public class Level3 implements Screen, InputProcessor {
         batch.begin();
         batch.draw(background, 0, 0,1920,1200);
         batch.draw(ground, 0, 0,1920,136);
-        batch.draw(slingshot, 258,100,100,200);
+//        batch.draw(slingshot, 258,100,100,200);
 
         batch.end();
 
@@ -299,7 +311,6 @@ public class Level3 implements Screen, InputProcessor {
         shapeRenderer.end();
 
         batch.begin();
-        batch.draw(slingpart, 258,170,100,140);
         pig1.updateImagePositionFromBody();
         pig2.updateImagePositionFromBody();
         block1.updateImagePositionFromBody();

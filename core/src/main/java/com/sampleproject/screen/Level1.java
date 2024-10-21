@@ -276,6 +276,8 @@ public class Level1 implements Screen, InputProcessor {
         yellowBird.getBirds(100,105);
         blackBird = new BlackBird(stage);
         blackBird.getBirds(50,105);
+        Catapult catapult = new Catapult(stage);
+        catapult.getCatapult();
 
         Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
@@ -297,7 +299,7 @@ public class Level1 implements Screen, InputProcessor {
         batch.begin();
         batch.draw(background, 0, 0,1920,1200);
         batch.draw(ground, 0, 0,1920,136);
-        batch.draw(slingshot, 258,100,100,200);
+//        batch.draw(slingshot, 258,100,100,200);
 
         batch.end();
 
@@ -309,7 +311,6 @@ public class Level1 implements Screen, InputProcessor {
         shapeRenderer.end();
 
         batch.begin();
-        batch.draw(slingpart, 258,170,100,140);
         pig1.updateImagePositionFromBody();
         pig2.updateImagePositionFromBody();
         block1.updateImagePositionFromBody();
