@@ -2,20 +2,34 @@ package com.sampleproject.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.sampleproject.Exception.GameNotFoundException;
 import com.sampleproject.Main;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
-        createApplication();
+        try {
+            createApplication();
+        }
+        catch (GameNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
-    private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new Main(), getDefaultConfiguration());
+    private static Lwjgl3Application createApplication() throws GameNotFoundException {
+        try {
+            return new Lwjgl3Application(new Main(), getDefaultConfiguration());
+        }
+        catch (GdxRuntimeException e) {
+            throw new GameNotFoundException(e.getMessage());
+        }
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
+
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setTitle("Angry Birds");
         //// Vsync limits the frames per second to what your hardware can display, and helps eliminate

@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sampleproject.Main;
 import com.sampleproject.model.GameSettings;
+import com.sampleproject.model.UserManager;
 
 public class HomeScreen implements Screen {
     private Texture background;
@@ -26,7 +27,8 @@ public class HomeScreen implements Screen {
     private Texture continueImage;
     private Main main;
 
-    public HomeScreen(Main main) {
+
+    public HomeScreen(UserManager.User user, Main main) {
         this.main = main;
 
     }

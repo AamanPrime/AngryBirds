@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -22,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
+import com.sampleproject.model.UserManager;
 
 public class SignUp implements Screen {
     private OrthographicCamera camera;
@@ -84,6 +84,9 @@ public class SignUp implements Screen {
         Image backbutton = new Image(new Texture("ui/back.png"));
         backbutton.setPosition(50,50);
         backbutton.setSize(100,100);
+
+
+
         loginButton.addListener(new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -96,6 +99,13 @@ public class SignUp implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+                String usernameText = username.getText();
+                String passwordText = password.getText();
+                UserManager userManager = new UserManager();
+                UserManager.User user = new UserManager.User(usernameText,passwordText);
+                userManager.addUser(user);
+
                 main.setScreen(new HomeScreen(main));
                 return false;
             }
@@ -123,6 +133,8 @@ public class SignUp implements Screen {
             }
         });
 
+
+
         stage.addActor(username);
         stage.addActor(password);
         stage.addActor(loginButton);
@@ -145,9 +157,6 @@ public class SignUp implements Screen {
         batch.draw(background, 0, 0,1920,1000);
 
         batch.end();
-        Vector2 touchPos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-        stage.screenToStageCoordinates(touchPos);
-        System.out.println("Touch position: x = " + touchPos.x + ", y = " + touchPos.y);
 
         stage.act(v);
         stage.draw();
