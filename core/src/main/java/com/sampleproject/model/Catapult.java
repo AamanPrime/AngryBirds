@@ -25,5 +25,8 @@ public class Catapult {
         stage.addActor(slingpart);
     }
 
+    public void launchbird() {
+
+    }
 
 }

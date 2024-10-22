@@ -10,11 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
 import com.sampleproject.model.GameSettings;
+
+import javax.swing.event.ChangeListener;
 
 public class SettingPage implements Screen {
     private OrthographicCamera camera;
@@ -25,10 +26,8 @@ public class SettingPage implements Screen {
     private Main main;
     public SettingPage(Main main) {
         this.main = main;
-    }
-    private boolean musicStatus = false;
-    private  boolean soundsStatus = false;
 
+    }
     @Override
     public void show() {
         camera = new OrthographicCamera();
@@ -43,38 +42,50 @@ public class SettingPage implements Screen {
         Image musicon = new Image(new Texture("ui/musicon.png"));
         soundon.setVisible(false);
         musicon.setVisible(false);
+        musicoff.setVisible(false);
+        soundon.setVisible(false);
         soundoff.setScale(0.7f);
         musicoff.setScale(0.7f);
         musicon.setScale(0.7f);
         soundon.setScale(0.7f);
-        if (musicStatus) {
-            musicon.setPosition(1245,520);
+        musicoff.setPosition(1245,545);
+        musicon.setPosition(1245,545);
+        soundon.setPosition(1245,400);
+        soundoff.setPosition(1245,400);
+        System.out.println(main.musicStatus);
+        System.out.println(main.soundStatus);
+        if (main.musicStatus) {
+            musicon.setVisible(true);
+            musicoff.setVisible(false);
         }
         else {
-            musicoff.setPosition(1245,520);
+            musicoff.setVisible(true);
+            musicon.setVisible(false);
         }
-        if (soundsStatus) {
-            soundon.setPosition(1245,375);
+
+        if (main.soundStatus) {
+            soundon.setVisible(true);
+            soundoff.setVisible(false);
         }
         else {
-            soundoff.setPosition(1245,375);
+            soundoff.setVisible(true);
+            soundon.setVisible(false);
         }
 
         musicoff.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                musicStatus = true;
-                musicoff.setVisible(false);
-                musicon.setPosition(1245,520);
+                main.musicStatus = true;
                 musicon.setVisible(true);
+                musicoff.setVisible(false);
+
                 return true;
             }
         });
         musicon.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                musicStatus = false;
-
+                main.musicStatus = false;
                 musicon.setVisible(false);
                 musicoff.setVisible(true);
                 return true;
@@ -84,10 +95,9 @@ public class SettingPage implements Screen {
         soundoff.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                soundsStatus = true;
-                soundoff.setVisible(false);
-                soundon.setPosition(1245,375);
+                main.soundStatus = true;
                 soundon.setVisible(true);
+                soundoff.setVisible(false);
                 return true;
             }
         });
@@ -95,9 +105,8 @@ public class SettingPage implements Screen {
         soundon.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                soundsStatus = false;
+                main.soundStatus = false;
                 soundon.setVisible(false);
-
                 soundoff.setVisible(true);
                 return true;
             }

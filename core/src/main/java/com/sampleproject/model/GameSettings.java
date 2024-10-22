@@ -1,9 +1,9 @@
 package com.sampleproject.model;
 
 public class GameSettings {
-    public boolean musicStatus = false;
-    public boolean soundStatus = false;
 
+    public boolean musicStatus;
+    public boolean soundStatus;
 
 
 }

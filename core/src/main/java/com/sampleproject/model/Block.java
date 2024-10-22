@@ -41,15 +41,13 @@ public class Block {
             blockbodyDef.type = BodyDef.BodyType.StaticBody;
         }
         else {
-            blockbodyDef.type = BodyDef.BodyType.DynamicBody;
+            blockbodyDef.type = BodyDef.BodyType.StaticBody;
         }
         blockbodyDef.position.set(x+width/2, y+height/2);
         blockBody = world.createBody(blockbodyDef);
-
         PolygonShape blockShape = new PolygonShape();
         blockShape.setAsBox(width/2, height/2);
         blockBody.createFixture(blockShape, 0f); // Static bodies don't need density
-
         FixtureDef groundFixtureDef = new FixtureDef();
         groundFixtureDef.shape = blockShape;
         groundFixtureDef.isSensor = false; // Ensure it's not a sensor
@@ -65,7 +63,7 @@ public class Block {
                 addNewHorizontalBlock(x,y,width,height);
             }
             else {
-                addOldVerticalBlock(x,y,width,height);
+                addOldHorizontalBlock(x,y,width,height);
             }
         }
         else {
@@ -94,15 +92,15 @@ public class Block {
 
 
     public void addNewHorizontalBlock(float x, float y, float width, float height) {
-        rectangle = new Image(new TextureRegion(new Texture("ui/Block.png"), 48, 133, 190, 22));
+        rectangle = new Image(new Texture("ui/horizontalblockNew.png"));
         rectangle.setSize(width, height);
         rectangle.setPosition(x, y);
         stage.addActor(rectangle);
 
     }
 
-    public void addBrokenHorizontalBlock(float x, float y, float width, float height) {
-        rectangle = new Image(new TextureRegion(new Texture("ui/Block.png"), 48, 90, 190, 22));
+    public void addOldHorizontalBlock(float x, float y, float width, float height) {
+        rectangle = new Image(new Texture("ui/horizontalblockOld.png"));
         rectangle.setSize(width, height);
         rectangle.setPosition(x, y);
         stage.addActor(rectangle);

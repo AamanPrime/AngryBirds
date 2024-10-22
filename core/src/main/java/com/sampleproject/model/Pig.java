@@ -2,16 +2,12 @@ package com.sampleproject.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import static java.lang.Thread.sleep;
 
@@ -22,10 +18,12 @@ public class Pig {
     private Stage stage;
     private Image pig;
     private Image pigdead;
-    public Pig(Stage stage,World world) {
+    private String type;
+    public Pig(Stage stage, World world,String type) {
         this.health = health;
         this.stage = stage;
         this.world = world;
+        this.type = type;
     }
     public int getHealth() {
         return health;
@@ -49,8 +47,15 @@ public class Pig {
         body.createFixture(fixtureDef);
 
         shape.dispose();
-
-        pig = new Image(new TextureRegion(new Texture("ui/all.png"),22,175,70,85));
+        if (type.equals("king")) {
+            pig = new Image(new TextureRegion(new Texture("ui/all.png"),22,175,70,85));
+        }
+        else if (type.equals("helmet")) {
+            pig = new Image(new TextureRegion(new Texture("ui/helmetpig.png")));
+        }
+        else {
+            pig = new Image(new TextureRegion(new Texture("ui/normalpig.png")));
+        }
         pigdead = new Image(new Texture("ui/deadpig.png"));
         pigdead.setSize(70,85);
         pig.setPosition(x,y);
@@ -81,7 +86,7 @@ public class Pig {
         float imageX = bodyPosition.x ;
         float imageY = bodyPosition.y;
         pig.setPosition(imageX, imageY);
-     //   pig.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+        //   pig.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
     }
 
 }

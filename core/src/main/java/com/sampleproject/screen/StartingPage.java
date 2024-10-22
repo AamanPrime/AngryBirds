@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
+import com.sampleproject.model.GameSettings;
 
 
 public class StartingPage implements Screen {
@@ -28,6 +29,7 @@ public class StartingPage implements Screen {
 
     public StartingPage(Main main) {
         StartingPage.main = main;
+
     }
 
     @Override

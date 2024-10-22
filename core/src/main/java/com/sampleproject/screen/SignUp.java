@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
@@ -123,7 +122,7 @@ public class SignUp implements Screen {
                 return false;
             }
         });
-        
+
         stage.addActor(username);
         stage.addActor(password);
         stage.addActor(loginButton);

@@ -1,32 +1,22 @@
 package com.sampleproject.screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
 import com.sampleproject.model.*;
-
-import java.util.logging.SocketHandler;
 
 public class Level1 implements Screen, InputProcessor {
 
@@ -40,17 +30,28 @@ public class Level1 implements Screen, InputProcessor {
     private Texture background;
     private Texture blocks;
     private Stage stage;
+    private Stage stage2;
     private ShapeRenderer shapeRenderer;
     private Vector2 ellipseCenter;    // Ellipse center (fixed in this case)
     private float width, height;      // Ellipse width and height
     private boolean isDragging = false; // Flag to track if the mouse is dragging
     Box2DDebugRenderer debugRenderer;
-    Pig pig1;
-    Pig pig2;
+    InputMultiplexer inputMultiplexer;
+    Pig Pig1;
+    Pig Pig2;
     Block block1;
     Block block2;
     Block block3;
     Block block4;
+    Block block5;
+    Block block6;
+    Block block7;
+    Block block8;
+    Block block9;
+    Block block10;
+    Block block11;
+    Block block12;
+
     private boolean stats;
     Image pause;
     Image play;
@@ -80,10 +81,11 @@ public class Level1 implements Screen, InputProcessor {
         viewport = new FitViewport(1920, 1000, camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
+        stage2 = new Stage(viewport, batch);
         ground = new Texture("angrybirds/ground.png");
         slingshot = new Texture("angrybirds/slingshot.png");
         slingpart = new Texture("angrybirds/slingpart.png");
-        background = new Texture("angrybirds/background.png");
+        background = new Texture("ui/level1bg.jpeg");
         pause = new Image(new Texture("ui/pause.png"));
         play = new Image(new Texture("ui/play.png"));play.setScale(0.56f);play.setPosition(1090, 600);play.setVisible(false);
         restart = new Image(new Texture("ui/restart.png"));restart.setScale(0.5f);restart.setPosition(720,600);restart.setVisible(false);
@@ -105,21 +107,19 @@ public class Level1 implements Screen, InputProcessor {
         musicoff.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                backgroundMusic.play();
+                main.musicStatus = true;
+                musicon.setVisible(true);
                 musicoff.setVisible(false);
 
-                musicon.setVisible(true);
                 return true;
             }
         });
         musicon.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-                backgroundMusic.stop();
+                main.musicStatus = false;
                 musicon.setVisible(false);
                 musicoff.setVisible(true);
-
                 return true;
             }
         });
@@ -127,10 +127,9 @@ public class Level1 implements Screen, InputProcessor {
         soundoff.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-                soundoff.setVisible(false);
-
+                main.soundStatus = true;
                 soundon.setVisible(true);
+                soundoff.setVisible(false);
                 return true;
             }
         });
@@ -138,48 +137,14 @@ public class Level1 implements Screen, InputProcessor {
         soundon.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+                main.soundStatus = false;
                 soundon.setVisible(false);
-
                 soundoff.setVisible(true);
                 return true;
             }
         });
 
 
-
-        play.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                backgroundMusic.play();
-                play.setVisible(false);
-                soundoff.setVisible(false);
-                soundon.setVisible(false);
-                musicoff.setVisible(false);
-                musicon.setVisible(false);
-                menu.setVisible(false);
-                restart.setVisible(false);
-                levels.setVisible(false);
-
-                return true;
-            }
-        });
-        pause.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                backgroundMusic.stop();
-                play.setVisible(true);
-
-                soundon.setVisible(!false);
-
-                musicon.setVisible(!false);
-                menu.setVisible(!false);
-                restart.setVisible(!false);
-                levels.setVisible(!false);
-
-                return true;
-            }
-        });
 
         restart.addListener(new InputListener() {
             @Override
@@ -207,15 +172,7 @@ public class Level1 implements Screen, InputProcessor {
 
 
 
-        pause.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-                showMenu();
-
-                return true;
-            }
-        });
 
         BodyDef groundBodyDef = new BodyDef();
         groundBodyDef.type = BodyDef.BodyType.StaticBody;
@@ -233,39 +190,75 @@ public class Level1 implements Screen, InputProcessor {
         groundShape.dispose();
         debugRenderer = new Box2DDebugRenderer();
 
-
+        ///ground block
         block1 = new Block(stage,2,world);
         block1.addBlock(1000,105,800,25);
+
+
         block2 = new Block(stage,1,world);
-        block2.addBlock(1100,124,25,200);
+        block2.addBlock(1202,128,25,101);
         block3 = new Block(stage,1,world);
-        block3.addBlock(1640,124,25,200);
+        block3.addBlock(1540,128,25,101);
+
         block4 = new Block(stage,0,world);
-        block4.addBlock(1100,323,1640-1100+20,25);
-        block2.addDamage();
+        block4.addBlock(1202,225,1540-1202+25,28);
+
+        Pig1 = new Pig(stage,world,"normal");
+        Pig1.addPig(1350,270);
+        Pig1.addDamage();
+
+        block5 = new Block(stage,1,world);
+        block5.addBlock(1202,225+28,25,152);
+        block6 = new Block(stage,1,world);
+        block6.addBlock(1540,225+28,25,152);
+
+        block7 = new Block(stage,0,world);
+        block7.addBlock(1202,225+28+152,1540-1202+25,28);
+
+        block8 = new Block(stage,1,world);
+        block8.addBlock(1202,225+28+152+25,25,152);
+        block9 = new Block(stage,1,world);
+        block9.addBlock(1540,225+28+152+25,25,152);
+
+        block10 = new Block(stage,1,world);
+        block10.addBlock(1202+100,225+28+152+25,25,152);
+        block11 = new Block(stage,1,world);
+        block11.addBlock(1540-100,225+28+152+25,25,152);
+
+        block12 = new Block(stage,0,world);
+        block12.addBlock(1202,225+28+152+25+152,1540-1202+25,28);
+
+
         block1.addDamage();
+        block2.addDamage();
         block3.addDamage();
         block4.addDamage();
-        pig1 = new Pig(stage,world);
-        pig1.addPig(1140,350);
-        pig1.addDamage();
-        pig2 = new Pig(stage,world);
-        pig2.addPig(1540,350);
-        pig2.addDamage();
+
+        block5.addDamage();
+        block6.addDamage();
+        block7.addDamage();
+        block8.addDamage();
+        block9.addDamage();
+
+
+
+        Pig2 = new Pig(stage,world,"king");
+        Pig2.addPig(1350,225+28+152+25);
+        Pig2.addDamage();
 
 
 
         menu.setPosition(600,400);
         menu.setScale(0.5f);
-        stage.addActor(menu);
+        stage2.addActor(menu);
         stage.addActor(pause);
-        stage.addActor(play);
-        stage.addActor(restart);
-        stage.addActor(levels);
-        stage.addActor(musicon);
-        stage.addActor(soundon);
-        stage.addActor(soundoff);
-        stage.addActor(musicoff);
+        stage2.addActor(play);
+        stage2.addActor(restart);
+        stage2.addActor(levels);
+        stage2.addActor(musicon);
+        stage2.addActor(soundon);
+        stage2.addActor(soundoff);
+        stage2.addActor(musicoff);
 
 
         redBird1 = new RedBird(stage);
@@ -281,11 +274,71 @@ public class Level1 implements Screen, InputProcessor {
 
         Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
-        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(this);
 
+
+
         Gdx.input.setInputProcessor(inputMultiplexer);
+
+        pause.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                inputMultiplexer.removeProcessor(stage);
+                removethis();
+                inputMultiplexer.addProcessor(stage2);
+                backgroundMusic.stop();
+                play.setVisible(true);
+                System.out.println(main.soundStatus);
+                System.out.println(main.musicStatus);
+                if (main.soundStatus) {
+                    soundon.setVisible(true);
+                    soundoff.setVisible(false);
+
+                }
+                else {
+                    soundon.setVisible(false);
+                    soundoff.setVisible(true);
+
+                }
+                if (main.musicStatus) {
+                    musicon.setVisible(true);
+                    musicoff.setVisible(false);
+
+                }
+                else {
+                    musicon.setVisible(false);
+                    musicoff.setVisible(true);
+
+                }
+                menu.setVisible(!false);
+                restart.setVisible(!false);
+                levels.setVisible(!false);
+
+                return true;
+            }
+        });
+        play.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                inputMultiplexer.removeProcessor(stage2);
+                inputMultiplexer.addProcessor(stage);
+                addthis();
+                backgroundMusic.play();
+                play.setVisible(false);
+                soundoff.setVisible(false);
+                soundon.setVisible(false);
+                musicoff.setVisible(false);
+                musicon.setVisible(false);
+                menu.setVisible(false);
+                restart.setVisible(false);
+                levels.setVisible(false);
+                return true;
+            }
+        });
+
+
 
     }
 
@@ -311,17 +364,31 @@ public class Level1 implements Screen, InputProcessor {
         shapeRenderer.end();
 
         batch.begin();
-        pig1.updateImagePositionFromBody();
-        pig2.updateImagePositionFromBody();
+        Pig1.updateImagePositionFromBody();
+        Pig2.updateImagePositionFromBody();
         block1.updateImagePositionFromBody();
         block2.updateImagePositionFromBody();
         block3.updateImagePositionFromBody();
         block4.updateImagePositionFromBody();
+        block5.updateImagePositionFromBody();
+        block6.updateImagePositionFromBody();
+        block7.updateImagePositionFromBody();
+
         batch.end();
 
         stage.act();
         stage.draw();
 
+        stage2.act();
+        stage2.draw();
+
+        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+            main.setScreen(new Won(main,1,0));
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.L)) {
+            main.setScreen(new Loss(main,1));
+        }
 
     }
 
@@ -333,6 +400,14 @@ public class Level1 implements Screen, InputProcessor {
     @Override
     public void resize(int i, int i1) {
 
+    }
+
+    public void removethis() {
+        inputMultiplexer.removeProcessor(this);
+    }
+
+    public void addthis() {
+        inputMultiplexer.addProcessor(this);
     }
 
     @Override

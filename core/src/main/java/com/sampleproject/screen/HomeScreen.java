@@ -11,13 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sampleproject.Main;
-import java.awt.*;
+import com.sampleproject.model.GameSettings;
 
 public class HomeScreen implements Screen {
     private Texture background;
@@ -27,8 +25,10 @@ public class HomeScreen implements Screen {
     private Stage stage;
     private Texture continueImage;
     private Main main;
+
     public HomeScreen(Main main) {
         this.main = main;
+
     }
     @Override
     public void show() {
