@@ -106,7 +106,7 @@ public class SignUp implements Screen {
                 UserManager.User user = new UserManager.User(usernameText,passwordText);
                 userManager.addUser(user);
 
-                main.setScreen(new HomeScreen(main));
+                main.setScreen(new HomeScreen(main,user));
                 return false;
             }
         });

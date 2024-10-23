@@ -2,15 +2,18 @@ package com.sampleproject.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -26,12 +29,19 @@ public class HomeScreen implements Screen {
     private Stage stage;
     private Texture continueImage;
     private Main main;
-
-
-    public HomeScreen(UserManager.User user, Main main) {
+    private UserManager userManager = new UserManager();
+    private UserManager.User user = userManager.getUsers("default");
+    private Label name;
+    private BitmapFont font;
+    public HomeScreen(Main main,UserManager.User user) {
         this.main = main;
+        this.user = user;
 
     }
+    public HomeScreen(Main main) {
+        this.main = main;
+    }
+
     @Override
     public void show() {
         camera = new OrthographicCamera();
@@ -39,6 +49,15 @@ public class HomeScreen implements Screen {
 
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
+
+        font = new BitmapFont(Gdx.files.internal("font/w.fnt"));
+        font.setColor(Color.WHITE);
+        font.getData().setScale(1.25f);
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = font;
+        labelStyle.fontColor = Color.WHITE;
+
         background = new Texture("ui/homescreen.png");
         Image continueImage = new Image(new Texture("ui/continue.png"));
         Image selectlevel = new Image(new Texture("ui/selectlevel.png"));
@@ -46,6 +65,9 @@ public class HomeScreen implements Screen {
         Image close = new Image(new Texture("ui/close.png"));
         Image login = new Image(new Texture("ui/loginbutton.png"));
         Image signup = new Image(new Texture("ui/signupbutton.png"));
+        name = new Label(user.username, labelStyle);
+        name.setColor(Color.WHITE);
+        name.setPosition(90,900);
         setting.setPosition(50,30);
         setting.setScale(0.5f);
         continueImage.setScale(1f);
@@ -80,7 +102,6 @@ public class HomeScreen implements Screen {
                 main.setScreen(new SettingPage(main));
                 return true;
             }
-
         });
 
         close.addListener(new InputListener() {
@@ -187,17 +208,19 @@ public class HomeScreen implements Screen {
         stage.addActor(close);
         stage.addActor(login);
         stage.addActor(signup);
+        stage.addActor(name);
         Gdx.input.setInputProcessor(stage);
 
     }
 
     @Override
     public void render(float v) {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
         batch.draw(background, 0, 0, 1920, 1000);
+
         batch.end();
 
         stage.act();

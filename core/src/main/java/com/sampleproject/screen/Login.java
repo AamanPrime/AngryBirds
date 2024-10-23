@@ -121,7 +121,7 @@ public class Login implements Screen {
                 UserManager.User user = userManager.getUsers(usernameText);
                 if (user != null && user.password.equalsIgnoreCase(passwordText)) {
                     System.out.println(user.password);
-                    main.setScreen(new HomeScreen(main));
+                    main.setScreen(new HomeScreen(main,user));
                 }
                 else {
                     main.setScreen(new Login(main,homeScreen,"Error username or password"));

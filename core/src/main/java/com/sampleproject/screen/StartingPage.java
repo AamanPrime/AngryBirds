@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
 import com.sampleproject.model.GameSettings;
+import com.sampleproject.model.UserManager;
 
 
 public class StartingPage implements Screen {
@@ -119,7 +120,10 @@ public class StartingPage implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 backgroundMusic.stop();
-                main.setScreen(new HomeScreen(main));
+                UserManager userManager = new UserManager();
+                UserManager.User user = userManager.getUsers("default");
+
+                main.setScreen(new HomeScreen(main,user));
                 return true;
             }
         });
