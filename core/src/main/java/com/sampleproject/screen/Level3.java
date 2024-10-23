@@ -87,7 +87,7 @@ public class Level3 implements Screen, InputProcessor {
         ground = new Texture("angrybirds/ground.png");
         slingshot = new Texture("angrybirds/slingshot.png");
         slingpart = new Texture("angrybirds/slingpart.png");
-        background = new Texture("ui/level1bg.jpeg");
+        background = new Texture("ui/level3bg.png");
         pause = new Image(new Texture("ui/pause.png"));
         play = new Image(new Texture("ui/play.png"));play.setScale(0.56f);play.setPosition(1090, 600);play.setVisible(false);
         restart = new Image(new Texture("ui/restart.png"));restart.setScale(0.5f);restart.setPosition(720,600);restart.setVisible(false);
