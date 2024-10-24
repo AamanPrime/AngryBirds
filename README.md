@@ -111,6 +111,31 @@ The project is organized into the following main packages:
 
 ---
 
+# **OOPS Concepts Applied**
+
+This project adheres to the core **Object-Oriented Programming (OOP)** principles, including **Encapsulation**, **Polymorphism**, **Inheritance**, and **Abstraction**.
+
+### **1. Encapsulation**
+- All the classes have their attributes encapsulated, ensuring data security and controlled access. 
+- For example, in all of the bird classes (`YellowBird`, `RedBird`, `BlueBird`, `BlackBird`), each class has its own private attributes like `health` and `stage`. These attributes are accessible only via **getters and setters**, ensuring proper encapsulation.
+
+### **2. Polymorphism**
+- Each of the four bird classes (`YellowBird`, `RedBird`, `BlueBird`, `BlackBird`) overrides common methods inherited from the `Bird` superclass, such as `launch()`, `attack()`, and the **getters and setters** for the `health` attribute.
+- This demonstrates **polymorphism**, where different bird objects exhibit different behaviors for the same method (e.g., `launch()`), based on their specific type.
+
+### **3. Inheritance**
+- The bird classes (`YellowBird`, `RedBird`, `BlueBird`, `BlackBird`) extend the base `Bird` class, inheriting its core functionalities and attributes. 
+- This **inheritance** allows each bird class to share common behaviors, such as `launch()` and `attack()`, while also implementing unique behaviors (e.g., `BlueBird` can multiply, `BlackBird` can explode).
+
+### **4. Abstraction**
+- The project uses **abstraction** to hide unnecessary details and expose only the relevant functionalities.
+- For instance, the `Bird` class is an abstract class that defines common attributes and methods for all birds. However, the specific details of each bird's behavior are abstracted away in the derived classes like `RedBird` or `YellowBird`. This simplifies the interaction with bird objects while allowing for extensibility.
+
+This ensures that the project remains modular, maintainable, and follows industry best practices in software development using OOP principles.
+
+---
+
+
 ## **Future Enhancements**
 - **Multiplayer Support**: Add a multiplayer mode where two players can compete against each other.
 - **Dynamic Level Generator**: Implement a random level generator for infinite gameplay.
