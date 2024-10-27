@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -18,7 +19,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sampleproject.Main;
-import com.sampleproject.model.GameSettings;
 import com.sampleproject.model.UserManager;
 
 public class HomeScreen implements Screen {
@@ -36,11 +36,21 @@ public class HomeScreen implements Screen {
     public HomeScreen(Main main,UserManager.User user) {
         this.main = main;
         this.user = user;
+        if (user == null) {
+            userManager.addUser(new UserManager.User("default","default"));
+            user = userManager.getUsers("default");
+        }
 
     }
     public HomeScreen(Main main) {
         this.main = main;
+        user = userManager.getUsers("default");
+        if (user == null) {
+            userManager.addUser(new UserManager.User("default","default"));
+        }
+        user = userManager.getUsers("default");
     }
+
 
     @Override
     public void show() {
@@ -49,11 +59,11 @@ public class HomeScreen implements Screen {
 
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
-
-        font = new BitmapFont(Gdx.files.internal("font/w.fnt"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/f.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        font = generator.generateFont(parameter);
         font.setColor(Color.WHITE);
-        font.getData().setScale(1.25f);
-
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         labelStyle.fontColor = Color.WHITE;
@@ -65,7 +75,9 @@ public class HomeScreen implements Screen {
         Image close = new Image(new Texture("ui/close.png"));
         Image login = new Image(new Texture("ui/loginbutton.png"));
         Image signup = new Image(new Texture("ui/signupbutton.png"));
-        name = new Label(user.username, labelStyle);
+        Image signout = new Image(new Texture("ui/signout.png"));
+        Image storeicon = new Image(new Texture("ui/storeicon.png"));
+        name = new Label(user.getUsername(), labelStyle);
         name.setColor(Color.WHITE);
         name.setPosition(90,900);
         setting.setPosition(50,30);
@@ -80,14 +92,18 @@ public class HomeScreen implements Screen {
         login.setScale(0.5f);
         signup.setPosition(1670,825);
         signup.setScale(0.5f);
+        signout.setPosition(1670,900);
+        signout.setScale(0.5f);
+        storeicon.setScale(0.5f);
+        storeicon.setPosition(50,130);
+
+
         setting.addListener(new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 setting.addAction(Actions.sequence(
                     Actions.scaleTo(0.55f,0.55f,0.2f)
                 ));
-
-
             }
 
             @Override
@@ -121,6 +137,9 @@ public class HomeScreen implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+
+
                 Gdx.app.exit();
                 return true;
             }
@@ -164,6 +183,25 @@ public class HomeScreen implements Screen {
                 return true;
             }
         });
+        signout.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                signout.addAction(Actions.sequence(
+                    Actions.scaleTo(0.55f,0.55f,0.2f)
+                ));
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                signout.addAction(Actions.sequence(
+                    Actions.scaleTo(0.5f,0.5f,0.2f)
+                ));
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                main.setScreen(new HomeScreen(main));
+                return true;
+            }
+        });
         continueImage.addListener(new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -202,13 +240,47 @@ public class HomeScreen implements Screen {
                 return true;
             }
         });
+        storeicon.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                storeicon.addAction(Actions.sequence(Actions.scaleTo(0.52f,0.52f,0.2f)));
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                storeicon.addAction(Actions.sequence(Actions.scaleTo(0.5f,0.5f,0.2f)));
+            }
+            @Override
+            public boolean touchDown(InputEvent event,float x, float y, int pointer, int button) {
+                main.setScreen(new Store(homeScreen,user,main));
+                return true;
+            }
+        });
+
+        name.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event,float x, float y, int pointer, int button) {
+                main.setScreen(new User(main,user));
+                return true;
+            }
+        });
+
         stage.addActor(continueImage);
         stage.addActor(selectlevel);
         stage.addActor(setting);
         stage.addActor(close);
         stage.addActor(login);
         stage.addActor(signup);
+        stage.addActor(signout);
         stage.addActor(name);
+        stage.addActor(storeicon);
+        if (user == null || user.getUsername().equalsIgnoreCase("default")) {
+            signout.setVisible(false);
+        }
+        else {
+            login.setVisible(false);
+            signup.setVisible(false);
+        }
+
         Gdx.input.setInputProcessor(stage);
 
     }

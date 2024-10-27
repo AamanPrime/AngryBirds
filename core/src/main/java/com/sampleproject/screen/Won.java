@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
@@ -48,12 +50,15 @@ public class Won implements Screen {
         batch = new SpriteBatch();
         if (level == 1) {
             background = new Image(new Texture("ui/level1bg.jpeg"));
+            background.setSize(1920, 1200);
         }
         if (level == 2) {
             background = new Image(new Texture("ui/level2bg.png"));
+            background.setSize(1920, 1200);
         }
-        else {
-            background = new Image(new Texture("ui/level1bg.jpeg"));
+        else if (level == 3) {
+            background = new Image(new Texture("ui/level3bg.png"));
+            background.setSize(1920,1200);
         }
         dashboard = new Image(new Texture("ui/won.png"));
         restart = new Image(new Texture("ui/restart.png"));
@@ -72,20 +77,22 @@ public class Won implements Screen {
         bird.setPosition(1080,250);
         bird.setScale(0.5f);
         background.setPosition(0, 0);
-        background.setSize(1920,1000);
-        font = new BitmapFont(Gdx.files.internal("font/b.fnt"));
-        font.setColor(0, 0, 0, 1);
-        font.getData().setScale(1.5f);
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/f.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 70;
+        font = generator.generateFont(parameter);
         dashboard.setPosition(40, 0);
 
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
-        labelStyle.fontColor = new Color(255,255,0,1);
+        labelStyle.fontColor = new Color(255,255,255,1);
 
         Label label = new Label("Level " + level, labelStyle);
         Label scoreLabel = new Label(" " + score,labelStyle);
-        label.setPosition(840, 830);
-        scoreLabel.setPosition(810,430);
+        label.setPosition(840, 810);
+        scoreLabel.setPosition(810,412);
+
         levels.addListener(new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {

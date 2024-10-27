@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -62,7 +63,10 @@ public class Login implements Screen {
         stage = new Stage(viewport, batch);
         background = new Texture("ui/loginPage.png");
         TextureRegion inputTemplate = new TextureRegion(new Texture("ui/inputTemplate.png"),720,82);
-        font = new BitmapFont(Gdx.files.internal("font/b.fnt"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/f.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        font = generator.generateFont(parameter);
         font.setColor(0, 0, 0, 1);
         font.getData().setScale(0.85f);
         TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
@@ -119,9 +123,10 @@ public class Login implements Screen {
                 String passwordText = password.getText();
                 UserManager userManager = new UserManager();
                 UserManager.User user = userManager.getUsers(usernameText);
-                if (user != null && user.password.equalsIgnoreCase(passwordText)) {
-                    System.out.println(user.password);
+                if (user != null && user.getPassword().equalsIgnoreCase(passwordText)) {
+
                     main.setScreen(new HomeScreen(main,user));
+
                 }
                 else {
                     main.setScreen(new Login(main,homeScreen,"Error username or password"));

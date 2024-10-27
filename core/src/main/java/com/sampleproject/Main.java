@@ -3,6 +3,7 @@ package com.sampleproject;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.sampleproject.Exception.GameNotFoundException;
 import com.sampleproject.screen.*;
 
 public class Main extends Game {
@@ -10,10 +11,15 @@ public class Main extends Game {
     public boolean soundStatus = false;
     @Override
     public void create() {
-
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
-//        setScreen(new Won(this,1,0));
-        setScreen(new StartingPage(this));
+        try {
+            setScreen(new LoadingScreen(this));
+        }
+        catch (GameNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+
     }
 
 }

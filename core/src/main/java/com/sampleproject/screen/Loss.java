@@ -43,15 +43,18 @@ public class Loss implements Screen {
         batch = new SpriteBatch();
         if (level == 1) {
             background = new Image(new Texture("ui/level1bg.jpeg"));
+            background.setSize(1920, 1200);
         }
         if (level == 2) {
             background = new Image(new Texture("ui/level2bg.png"));
+            background.setSize(1920, 1200);
         }
-        else {
-            background = new Image(new Texture("ui/level1bg.jpeg"));
+        else if (level == 3) {
+            background = new Image(new Texture("ui/level3bg.png"));
+            background.setSize(1920,1200);
         }
         background.setPosition(0, 0);
-        background.setSize(1920, 1080);
+
         loss = new Image(new Texture("ui/loss.png"));
         loss.setPosition(685, 100);
         loss.setSize(550,850);

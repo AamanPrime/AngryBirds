@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
-import com.sampleproject.model.GameSettings;
 import com.sampleproject.model.UserManager;
 
 
@@ -122,7 +121,10 @@ public class StartingPage implements Screen {
                 backgroundMusic.stop();
                 UserManager userManager = new UserManager();
                 UserManager.User user = userManager.getUsers("default");
-
+                if (user == null) {
+                    userManager.addUser(new UserManager.User("default","default"));
+                    user = userManager.getUsers("default");
+                }
                 main.setScreen(new HomeScreen(main,user));
                 return true;
             }

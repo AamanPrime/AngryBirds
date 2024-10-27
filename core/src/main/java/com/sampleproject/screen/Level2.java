@@ -32,11 +32,11 @@ public class Level2 implements Screen, InputProcessor {
     private Stage stage;
     private Stage stage2;
     private ShapeRenderer shapeRenderer;
-    private Vector2 ellipseCenter;    // Ellipse center (fixed in this case)
-    private float width, height;      // Ellipse width and height
-    private boolean isDragging = false; // Flag to track if the mouse is dragging
+    private Vector2 ellipseCenter;
+    private float width, height;
+    private boolean isDragging = false;
     Box2DDebugRenderer debugRenderer;
-    InputMultiplexer inputMultiplexer;
+    public InputMultiplexer inputMultiplexer;
     Pig Pig1;
     Pig Pig2;
     Block block1;
@@ -53,15 +53,8 @@ public class Level2 implements Screen, InputProcessor {
     Block block12;
 
     private boolean stats;
-    Image pause;
-    Image play;
-    Image restart;
-    Image levels;
-    Image musicon;
-    Image musicoff;
-    Image soundon;
-    Image soundoff;
-    Image menu;
+    public Image pause;
+
 
     RedBird redBird1;
     YellowBird yellowBird;
@@ -70,7 +63,7 @@ public class Level2 implements Screen, InputProcessor {
     private Pig Pig3;
     private Pig Pig4;
     private Main main;
-    private Music backgroundMusic;
+    public Music backgroundMusic;
     public Level2(Main main) {
         this.main = main;
     }
@@ -89,80 +82,14 @@ public class Level2 implements Screen, InputProcessor {
         slingpart = new Texture("angrybirds/slingpart.png");
         background = new Texture("ui/level2bg.png");
         pause = new Image(new Texture("ui/pause.png"));
-        play = new Image(new Texture("ui/play.png"));play.setScale(0.56f);play.setPosition(1090, 600);play.setVisible(false);
-        restart = new Image(new Texture("ui/restart.png"));restart.setScale(0.5f);restart.setPosition(720,600);restart.setVisible(false);
-        levels = new Image(new Texture("ui/menu.png"));levels.setScale(0.5f);levels.setPosition(900,600);levels.setVisible(false);
-        musicon = new Image(new Texture("ui/musicon.png"));musicon.setScale(0.6f);musicon.setPosition(800,500);musicon.setVisible(false);
-        musicoff = new Image(new Texture("ui/musicoff.png"));musicoff.setScale(0.6f);musicoff.setPosition(800,500);musicoff.setVisible(false);
-        soundon = new Image(new Texture("ui/soundon.png"));soundon.setScale(0.6f);soundon.setPosition(1000,500);soundon.setVisible(false);
-        soundoff = new Image(new Texture("ui/soundoff.png"));soundoff.setScale(0.6f);soundoff.setPosition(1000,500);soundoff.setVisible(false);
-        menu = new Image(new Texture("ui/pauseMenu.png"));menu.setVisible(false);
         pause.setPosition(20, 900);
         pause.setScale(0.5f);
-
+        stage.addActor(pause);
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/game.wav"));
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(0.5f);
         backgroundMusic.play();
 
-
-        musicoff.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.musicStatus = true;
-                musicon.setVisible(true);
-                musicoff.setVisible(false);
-
-                return true;
-            }
-        });
-        musicon.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.musicStatus = false;
-                musicon.setVisible(false);
-                musicoff.setVisible(true);
-                return true;
-            }
-        });
-
-        soundoff.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.soundStatus = true;
-                soundon.setVisible(true);
-                soundoff.setVisible(false);
-                return true;
-            }
-        });
-
-        soundon.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.soundStatus = false;
-                soundon.setVisible(false);
-                soundoff.setVisible(true);
-                return true;
-            }
-        });
-
-
-
-        restart.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new Level2(main));
-                return false;
-            }
-        });
-
-        levels.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new Levels(main));
-                return false;
-            }
-        });
 
 
         shapeRenderer = new ShapeRenderer();
@@ -181,13 +108,13 @@ public class Level2 implements Screen, InputProcessor {
         groundBodyDef.position.set(0, 0);
         Body groundBody = world.createBody(groundBodyDef);
         PolygonShape groundShape = new PolygonShape();
-        groundShape.setAsBox(1920, 100); // Width of 50, height of 1
-        groundBody.createFixture(groundShape, 0.0f); // Static bodies don't need density
+        groundShape.setAsBox(1920, 100);
+        groundBody.createFixture(groundShape, 0.0f);
         FixtureDef groundFixtureDef = new FixtureDef();
         groundFixtureDef.shape = groundShape;
-        groundFixtureDef.isSensor = false; // Ensure it's not a sensor
-        groundFixtureDef.friction = 0.5f; // Adjust friction as necessary
-        groundFixtureDef.restitution = 0f; // Bounciness, set to 0 for no bounce
+        groundFixtureDef.isSensor = false;
+        groundFixtureDef.friction = 0.5f;
+        groundFixtureDef.restitution = 0f;
         groundBody.createFixture(groundFixtureDef);
         groundShape.dispose();
         debugRenderer = new Box2DDebugRenderer();
@@ -256,19 +183,6 @@ public class Level2 implements Screen, InputProcessor {
 
 
 
-        menu.setPosition(600,400);
-        menu.setScale(0.5f);
-        stage2.addActor(menu);
-        stage.addActor(pause);
-        stage2.addActor(play);
-        stage2.addActor(restart);
-        stage2.addActor(levels);
-        stage2.addActor(musicon);
-        stage2.addActor(soundon);
-        stage2.addActor(soundoff);
-        stage2.addActor(musicoff);
-
-
         redBird1 = new RedBird(stage);
         redBird1.getBirds(190,105);
         blueBird = new BlueBird(stage);
@@ -297,51 +211,9 @@ public class Level2 implements Screen, InputProcessor {
                 removethis();
                 inputMultiplexer.addProcessor(stage2);
                 backgroundMusic.stop();
-                play.setVisible(true);
-                System.out.println(main.soundStatus);
-                System.out.println(main.musicStatus);
-                if (main.soundStatus) {
-                    soundon.setVisible(true);
-                    soundoff.setVisible(false);
-
-                }
-                else {
-                    soundon.setVisible(false);
-                    soundoff.setVisible(true);
-
-                }
-                if (main.musicStatus) {
-                    musicon.setVisible(true);
-                    musicoff.setVisible(false);
-
-                }
-                else {
-                    musicon.setVisible(false);
-                    musicoff.setVisible(true);
-
-                }
-                menu.setVisible(!false);
-                restart.setVisible(!false);
-                levels.setVisible(!false);
-
-                return true;
-            }
-        });
-        play.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                inputMultiplexer.removeProcessor(stage2);
-                inputMultiplexer.addProcessor(stage);
-                addthis();
-                backgroundMusic.play();
-                play.setVisible(false);
-                soundoff.setVisible(false);
-                soundon.setVisible(false);
-                musicoff.setVisible(false);
-                musicon.setVisible(false);
-                menu.setVisible(false);
-                restart.setVisible(false);
-                levels.setVisible(false);
+                pause.setVisible(false);
+                PauseMenu p = new PauseMenu(stage,main,getthis(),stage2);
+                p.show();
                 return true;
             }
         });
@@ -364,10 +236,10 @@ public class Level2 implements Screen, InputProcessor {
 
         batch.end();
 
-        debugRenderer.render(world, camera.combined);
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0,0,0,1);
-        drawHalfEllipse(348,270,width,height,90,180);
+        drawHalfEllipse(318,270,width,height,90,180);
 
         shapeRenderer.end();
 
@@ -395,19 +267,19 @@ public class Level2 implements Screen, InputProcessor {
         stage2.draw();
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            main.setScreen(new Won(main,1,0));
+            main.setScreen(new Won(main,2,0));
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.L)) {
-            main.setScreen(new Loss(main,1));
+            main.setScreen(new Loss(main,2));
         }
 
     }
 
-    private void showMenu() {
-
-
+    public Level2 getthis() {
+        return this;
     }
+
 
     @Override
     public void resize(int i, int i1) {
@@ -497,13 +369,13 @@ public class Level2 implements Screen, InputProcessor {
         return true;
     }
     private void drawHalfEllipse(float cx, float cy, float width, float height, float startAngle, float sweepAngle) {
-        float angleStep = sweepAngle / 50;  // Divide the sweep angle by the number of segments
+        float angleStep = sweepAngle / 50;
 
-        // Loop through angles from startAngle to startAngle + sweepAngle
+
         for (float angle = startAngle; angle <= startAngle + sweepAngle; angle += angleStep) {
-            float rad = (float) Math.toRadians(angle);  // Convert angle to radians
-            float x = cx + (width / 2f) * (float) Math.cos(rad);  // Calculate x-coordinate (keeps x-axis movement)
-            float y = cy + (height / 2f) * (float) Math.sin(rad); // Calculate y-coordinate (keeps y-axis unchanged)
+            float rad = (float) Math.toRadians(angle);
+            float x = cx + (width / 2f) * (float) Math.cos(rad);
+            float y = cy + (height / 2f) * (float) Math.sin(rad);
 
 
             if (angle > startAngle) {

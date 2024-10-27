@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sampleproject.Exception.GameNotFoundException;
 import com.sampleproject.Main;
-import com.sampleproject.model.GameSettings;
 
 public class LoadingScreen implements Screen {
     private Texture loadingimg;
@@ -23,10 +23,15 @@ public class LoadingScreen implements Screen {
     private float progress = 0.25f;
     private Texture loadingtext;
     private Main main;
-    GameSettings settings;
-    public LoadingScreen(Main main, GameSettings settings) {
-        this.main = main;
-        this.settings = settings;
+
+    public LoadingScreen(Main main) throws GameNotFoundException {
+        try {
+            this.main = main;
+        }
+        catch (Exception e) {
+            throw new GameNotFoundException("Game Not Found");
+        }
+
     }
     @Override
     public void show() {
@@ -66,7 +71,7 @@ public class LoadingScreen implements Screen {
                 main.setScreen(new StartingPage(main));
             }
 
-            System.out.println(loadingBarWidth);
+
     }
 
     @Override

@@ -2,20 +2,23 @@ package com.sampleproject.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
-import com.sampleproject.model.GameSettings;
-
-import javax.swing.event.ChangeListener;
 
 public class SettingPage implements Screen {
     private OrthographicCamera camera;
@@ -24,9 +27,9 @@ public class SettingPage implements Screen {
     private Stage stage;
     private Texture background;
     private Main main;
+    private BitmapFont font;
     public SettingPage(Main main) {
         this.main = main;
-
     }
     @Override
     public void show() {
@@ -44,16 +47,60 @@ public class SettingPage implements Screen {
         musicon.setVisible(false);
         musicoff.setVisible(false);
         soundon.setVisible(false);
-        soundoff.setScale(0.7f);
-        musicoff.setScale(0.7f);
-        musicon.setScale(0.7f);
-        soundon.setScale(0.7f);
-        musicoff.setPosition(1245,545);
-        musicon.setPosition(1245,545);
-        soundon.setPosition(1245,400);
-        soundoff.setPosition(1245,400);
-        System.out.println(main.musicStatus);
-        System.out.println(main.soundStatus);
+        soundoff.setScale(0.5f);
+        musicoff.setScale(0.5f);
+        musicon.setScale(0.5f);
+        soundon.setScale(0.5f);
+        close.setScale(0.5f);
+        musicoff.setPosition(1110,545);
+        musicon.setPosition(1110,545);
+        soundon.setPosition(1110,434);
+        soundoff.setPosition(1110,434);
+        close.setPosition(1350,700);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/f.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 75;
+        font = generator.generateFont(parameter);
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = font;
+        labelStyle.fontColor = new Color(255,255,255,1);
+
+        Label settinglabel = new Label("Settings", labelStyle);
+        settinglabel.setPosition(820,1000-350);
+
+        Label soundlabel = new Label("Sound", labelStyle);
+        soundlabel.setPosition(700,1000-460);
+        Label musiclabel = new Label("Music", labelStyle);
+        musiclabel.setPosition(700,1000-570);
+        Label difficultylabel = new Label("Difficulty", labelStyle);
+        difficultylabel.setPosition(700,1000-675);
+        Label difficulty = new Label("HARD", labelStyle);
+        Label easy = new Label("EASY", labelStyle);
+        difficulty.setPosition(1080,1000-680);
+        difficulty.setFontScale(0.5f);
+        easy.setPosition(1080,1000-680);
+        easy.setFontScale(0.5f);
+        easy.setVisible(false);
+        difficulty.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+                difficulty.setVisible(false);
+                easy.setVisible(true);
+                return true;
+            }
+        });
+        easy.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+                easy.setVisible(false);
+                difficulty.setVisible(true);
+                return true;
+            }
+        });
+
         if (main.musicStatus) {
             musicon.setVisible(true);
             musicoff.setVisible(false);
@@ -118,16 +165,37 @@ public class SettingPage implements Screen {
                 main.setScreen(new HomeScreen(main));
                 return true;
             }
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                close.addAction(Actions.sequence(
+                    Actions.scaleTo(0.55f,0.55f,0.2f)
+                ));
+
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                close.addAction(Actions.sequence(
+                    Actions.scaleTo(0.5f,0.5f,0.2f)
+                ));
+            }
         });
 
 
 
-        close.setPosition(1450,780);
+
+
         stage.addActor(close);
         stage.addActor(soundon);
         stage.addActor(soundoff);
         stage.addActor(musicon);
         stage.addActor(musicoff);
+
+        stage.addActor(settinglabel);
+        stage.addActor(musiclabel);
+        stage.addActor(soundlabel);
+        stage.addActor(difficultylabel);
+        stage.addActor(difficulty);
+        stage.addActor(easy);
         Gdx.input.setInputProcessor(stage);
     }
 

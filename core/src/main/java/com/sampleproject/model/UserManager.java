@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 
 public class UserManager {
-    private static String credentials = "db/credentials.json";
+    private static final String credentials = "db/credentials.json";
     public static class User {
         public String username;
         public String password;
@@ -25,6 +25,18 @@ public class UserManager {
         }
         public User() {
 
+        }
+        public String getUsername() {
+            return username;
+        }
+        public void setUsername(String username) {
+            this.username = username;
+        }
+        public String getPassword() {
+            return password;
+        }
+        public void setPassword(String password) {
+            this.password = password;
         }
     }
 
@@ -50,7 +62,7 @@ public class UserManager {
         String jsonString = json.toJson(users);
         System.out.println(jsonString);
         FileHandle fileHandle2 = Gdx.files.local(credentials);
-        fileHandle.writeString(jsonString, false);
+        fileHandle2.writeString(jsonString, false);
 
     }
 
@@ -74,7 +86,7 @@ public class UserManager {
 
 
     public User loadUser() {
-        FileHandle file = Gdx.files.local("user.json");
+        FileHandle file = Gdx.files.internal("user.json");
         if (file.exists()) {
             Json json = new Json();
             return json.fromJson(User.class, file.readString());
