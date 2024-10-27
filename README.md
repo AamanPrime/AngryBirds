@@ -153,11 +153,13 @@ This document provides an overview of the contributions made by each member of t
 
 - **Model Classes:**
   - Created key game components by developing the classes for:
+    - `BirdInterface`: Provides an overview for the implementation to other classes of Birds.
     - `BlackBird`: Handles the black bird character attributes and behaviors.
     - `Block`: Defines game blocks and their interactions.
     - `BlueBird`: Implements blue bird-specific features and properties.
     - `Catapult`: Manages catapult loading and launching mechanisms.
     - `LevelIcon`: Represents levels' icons on selection screens.
+    - `PauseMenu`: Implements the stopping of the in-between game feature. 
     - `RedBird`: Red bird class to set specific behaviors.
     - `Rock`: Implements rock properties and interactions.
     - `Tnt`: Defines the TNT explosive object, including damage handling.
@@ -172,6 +174,7 @@ This document provides an overview of the contributions made by each member of t
     - `Login`: Manages user login functionality.
     - `SignUp`: Enables new users to sign up and register.
     - `StartingPage`: Initial launch page of the game.
+    - `Store`: Manages abitity of user to purchase different types of slingshots.
 
 - **Main Class:**
   - Developed the primary entry point and main execution logic for initializing and running the game.
