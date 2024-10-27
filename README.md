@@ -104,10 +104,6 @@ The project is organized into the following main packages:
 3. Run `gradle build` to download all dependencies and build the project.
 4. Run `gradle run` to start the game.
 
-### **3. Game Controls**
-- **Drag** the bird on the catapult and release to launch it.
-- **Tap** on the settings icon to adjust the game settings.
-- **Login** and **SignUp** pages allow user authentication before starting the game.
 
 ---
 
@@ -143,14 +139,88 @@ This ensures that the project remains modular, maintainable, and follows industr
 
 ---
 
-## **Contributors**
-- **[Your Name]**
-- **[Teammate's Name]**
+# **Byte Me! - Game Project Contribution Log**
+
+### **Contributors**  
+This document provides an overview of the contributions made by each member of the team, detailing their roles, classes implemented, and the specific tasks they performed to complete the project successfully.
 
 ---
 
-## **License**
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## **1. Aaman Sheikh**
+
+### Contributions:
+
+- **Model Classes:**
+  - Created key game components by developing the classes for:
+    - `BlackBird`: Handles the black bird character attributes and behaviors.
+    - `Block`: Defines game blocks and their interactions.
+    - `BlueBird`: Implements blue bird-specific features and properties.
+    - `Catapult`: Manages catapult loading and launching mechanisms.
+    - `LevelIcon`: Represents levels' icons on selection screens.
+    - `RedBird`: Red bird class to set specific behaviors.
+    - `Rock`: Implements rock properties and interactions.
+    - `Tnt`: Defines the TNT explosive object, including damage handling.
+    - `YellowBird`: Manages the yellow bird character traits.
+
+- **Screen Classes:**
+  - Developed classes representing key screens in the game interface:
+    - `HomeScreen`: Main screen for accessing various game options.
+    - `Level1`, `Level2`, `Level3`: Individual levels with specific configurations.
+    - `Levels`: Provides an overview of all available levels.
+    - `LoadingScreen`: Displays the loading process for smooth transitions.
+    - `Login`: Manages user login functionality.
+    - `SignUp`: Enables new users to sign up and register.
+    - `StartingPage`: Initial launch page of the game.
+
+- **Main Class:**
+  - Developed the primary entry point and main execution logic for initializing and running the game.
+
+- **Workflow Management:**
+  - Ensured smooth workflow across the entire game by coordinating interdependencies among classes.
+  - Verified the integration between different components.
+
+- **Debugging:**
+  - Conducted comprehensive debugging across all classes and screens, resolving logical, runtime, and performance issues.
+
+---
+
+## **2. Akshat Singh**
+
+### Contributions:
+
+- **Exception Classes:**
+  - Created specialized exception classes to handle game-specific errors:
+    - `GameNotFoundException`: Exception handling for missing game files or resources.
+    - `UnableToRestartGameException`: Manages errors occurring during game restart attempts.
+
+- **Utility Class:**
+  - Developed `TouchInputHandler`: Handles user interactions, converting touch input into in-game actions to enable smooth, responsive gameplay.
+
+- **Model Classes:**
+  - Designed additional core game models:
+    - `Pig`: Implements the pig characters, detailing interactions, hit points, and behaviors.
+    - `GameSettings`: Manages game configuration settings, including difficulty, sound, and display settings.
+    - `UserManager`: Handles user data and account management, including login, registration, and profile management.
+
+- **Screen Classes:**
+  - Created specific game screens to manage game results and settings:
+    - `SettingPage`: Provides options to modify game settings.
+    - `Loss`: Displays when the player loses a level, with options to retry or return to the main menu.
+    - `Win`: Celebratory screen shown upon winning a level, displaying the score and options for the next steps.
+
+- **Readme Documentation:**
+  - Authored the `README.md` file to document game objectives, usage instructions, and setup details.
+
+- **Debugging Assistance:**
+  - Assisted in debugging the program, focusing on UI/UX bugs and optimizing gameplay experience.
+
+---
+
+### **Team Achievements**
+
+- **Code Workflow and Debugging:**
+  - The team collaborated to establish a well-defined workflow, enabling efficient debugging and seamless integration among game components.
+  - Aaman Sheikh led the primary debugging, while Akshat Singh focused on ensuring a stable user experience by refining exception handling and game settings management.
 
 ---
 
