@@ -101,10 +101,11 @@ The project is organized into the following main packages:
 ### **2. Setup**
 1. Clone the repository.
 2. Navigate to the project directory.
-3. Run `gradle build` to download all dependencies and build the project.
-4. Run `gradle run` to start the game.
+3. Run `./gradlew build` to download all dependencies and build the project.
+4. Run `./gradlew lwjgl3:run` to start the game.
 
-
+### **3. Run**
+- Just click on the run(triangle) button above the main class to run the program.
 ---
 
 # **OOPS Concepts Applied**
