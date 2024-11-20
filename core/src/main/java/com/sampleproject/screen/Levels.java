@@ -99,7 +99,7 @@ public class Levels implements Screen {
         level3.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new Level3(main));
+                //main.setScreen(new Level3(main));
                 return true;
             }
         });

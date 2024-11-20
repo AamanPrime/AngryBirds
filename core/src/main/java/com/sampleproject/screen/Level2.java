@@ -2,9 +2,9 @@ package com.sampleproject.screen;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -13,94 +13,96 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
 import com.sampleproject.Main;
 import com.sampleproject.model.*;
 
-public class Level2 implements Screen, InputProcessor {
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
+public class Level2 implements Screen, InputProcessor {
     private World world;
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Viewport viewport;
     private Texture ground;
-    private Texture slingshot;
-    private Texture slingpart;
     private Texture background;
-    private Texture blocks;
     private Stage stage;
     private Stage stage2;
-    private ShapeRenderer shapeRenderer;
-    private Vector2 ellipseCenter;
-    private float width, height;
-    private boolean isDragging = false;
+    public ShapeRenderer shapeRenderer;
     Box2DDebugRenderer debugRenderer;
     public InputMultiplexer inputMultiplexer;
-    Pig Pig1;
-    Pig Pig2;
+    public Music backgroundMusic;
+    private float waitTime = 0f;
+    private final float WAIT_DURATION = 5f;
+    private boolean isWaiting = false;
+
+    private BitmapFont font;
+    private Label scoreLabel;
+    Pig pig1;
+    Pig pig2;
+    Pig pig3;
     Block block1;
     Block block2;
     Block block3;
     Block block4;
-    Rock rock5;
-    Rock rock6;
+    Block block5;
+    Block block6;
     Block block7;
-    Rock rock8;
-    Rock rock9;
+    Block block8;
+    Block block9;
     Block block10;
     Block block11;
     Block block12;
-
-    private boolean stats;
+    private Catapult catapult;
     public Image pause;
-
-
-    RedBird redBird1;
+    RedBird redBird;
     YellowBird yellowBird;
     BlueBird blueBird;
-    BlackBird blackBird;
-    private Pig Pig3;
-    private Pig Pig4;
+    //    BlackBird blackBird;
+    BlueBird b1;
+    BlueBird b2;
     private Main main;
-    public Music backgroundMusic;
+
+    private ArrayList<Block> allBlock = new ArrayList<>();
+    private ArrayList<Rock> allRock = new ArrayList<>();
+    private ArrayList<Pig> allPig = new ArrayList<>();
+    private Queue<BirdInterface> allBirds = new LinkedList<>();
     public Level2(Main main) {
         this.main = main;
     }
-
+    public final float PPM = 32f;
+    public final float WORLD_WIDTH_METERS = 1920f / PPM;
+    public final float WORLD_HEIGHT_METERS = 1000f / PPM;
+    private int score;
     @Override
     public void show() {
-        world = new World(new Vector2(0, -9.8f), true);
+        world = new World(new Vector2(0, -9.81f), true);
+        world.setContactListener(new BirdBlockContactListener());
         stage = new Stage();
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(1920, 1000, camera);
+        camera = new OrthographicCamera(WORLD_WIDTH_METERS,WORLD_HEIGHT_METERS);
+        camera.update();
+        camera.position.set(0,0, 0);
+        viewport = new FitViewport(WORLD_WIDTH_METERS,WORLD_HEIGHT_METERS, camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
         stage2 = new Stage(viewport, batch);
         ground = new Texture("angrybirds/ground.png");
-        slingshot = new Texture("angrybirds/slingshot.png");
-        slingpart = new Texture("angrybirds/slingpart.png");
-        background = new Texture("ui/level2bg.png");
+        background = new Texture("ui/level1bg.jpeg");
         pause = new Image(new Texture("ui/pause.png"));
-        pause.setPosition(20, 900);
-        pause.setScale(0.5f);
+        pause.setPosition(32/PPM, 900/PPM);
+        pause.setScale(0.5f/PPM);
         stage.addActor(pause);
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/game.wav"));
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(0.5f);
-        backgroundMusic.play();
-
-
+//        backgroundMusic.play();
 
         shapeRenderer = new ShapeRenderer();
-        ellipseCenter = new Vector2(250,190);
-        width = 100;
-        height = 1;
-
-
-
-
-
 
 
         BodyDef groundBodyDef = new BodyDef();
@@ -108,7 +110,7 @@ public class Level2 implements Screen, InputProcessor {
         groundBodyDef.position.set(0, 0);
         Body groundBody = world.createBody(groundBodyDef);
         PolygonShape groundShape = new PolygonShape();
-        groundShape.setAsBox(1920, 100);
+        groundShape.setAsBox(1920 / PPM, 100/PPM);
         groundBody.createFixture(groundShape, 0.0f);
         FixtureDef groundFixtureDef = new FixtureDef();
         groundFixtureDef.shape = groundShape;
@@ -117,92 +119,79 @@ public class Level2 implements Screen, InputProcessor {
         groundFixtureDef.restitution = 0f;
         groundBody.createFixture(groundFixtureDef);
         groundShape.dispose();
-        debugRenderer = new Box2DDebugRenderer();
 
         ///ground block
-        block1 = new Block(stage,2,world);
+        block1 = new Block(stage,2,world, allBlock);
         block1.addBlock(1000,105,800,25);
 
-
-        block2 = new Block(stage,1,world);
-        block2.addBlock(1202,128,25,101+152+25);
-        block3 = new Block(stage,1,world);
-        block3.addBlock(1540,128,25,101+152+25);
-
-
-        rock5 = new Rock(stage,1,world);
-        rock5.addRock(1102,132,25,3*152 + 100);
-        rock6 = new Rock(stage,1,world);
-        rock6.addRock(1640,132,25,3*152+100);
-
-        block7 = new Block(stage,0,world);
-        block7.addBlock(1202,225+28+152,1540-1202+25,28);
-
-        rock8 = new Rock(stage,1,world);
-        rock8.addRock(1202,225+28+152+25,25,152);
-        rock9 = new Rock(stage,1,world);
-        rock9.addRock(1540,225+28+152+25,25,152);
-
-        block10 = new Block(stage,1,world);
-        block10.addBlock(1202+100,225+28+152+25,25,152);
-        block11 = new Block(stage,1,world);
-        block11.addBlock(1540-100,225+28+152+25,25,152);
-
-        block12 = new Block(stage,0,world);
-        block12.addBlock(1202,225+28+152+25+152,1540-1202+25,28);
-
-
-        block1.addDamage();
+        block2 = new Block(stage,1,world, allBlock);
+        block2.addBlock(1202,128,25,101);
         block2.addDamage();
+        block3 = new Block(stage,1,world, allBlock);
+        block3.addBlock(1540,128,25,101);
         block3.addDamage();
+        block4 = new Block(stage,0,world, allBlock);
+        block4.addBlock(1202,225,1540-1202+25,28);
+        block4.addDamage();
+        pig1 = new Pig(stage,world,"normal");
+        pig1.addPig(1350,270,allPig);
+        pig1.addDamage();
 
-
-        rock5.addDamage();
-        rock6.addDamage();
+        block5 = new Block(stage,1,world, allBlock);
+        block5.addBlock(1202,225+28,25,152);
+        block5.addDamage();
+        block6 = new Block(stage,1,world, allBlock);
+        block6.addBlock(1540,225+28,25,152);
+        block6.addDamage();
+        block7 = new Block(stage,0,world, allBlock);
+        block7.addBlock(1202,225+28+152,1540-1202+25,28);
         block7.addDamage();
-        rock8.addDamage();
-        rock9.addDamage();
+        block8 = new Block(stage,1,world, allBlock);
+        block8.addBlock(1202,225+28+152+25,25,152);
+        block8.addDamage();
+        block9 = new Block(stage,1,world, allBlock);
+        block9.addBlock(1540,225+28+152+25,25,152);
+        block9.addDamage();
+        block10 = new Block(stage,1,world, allBlock);
+        block10.addBlock(1202+100,225+28+152+25,25,152);
         block10.addDamage();
+        block11 = new Block(stage,1,world, allBlock);
+        block11.addBlock(1540-100,225+28+152+25,25,152);
         block11.addDamage();
+        block12 = new Block(stage,0,world, allBlock);
+        block12.addBlock(1202,225+28+152+25+152,1540-1202+25,28);
         block12.addDamage();
-        TNT tnt1 = new TNT(stage,1350,132,world);
-        tnt1.addTNT();
-        Pig1 = new Pig(stage,world,"normal");
-        Pig1.addPig(1370,270);
-        Pig1.addDamage();
-        Pig3 = new Pig(stage,world,"helmet");
-        Pig3.addPig(1470,132);
-        Pig3.addDamage();
-        Pig4 = new Pig(stage,world,"helmet");
-        Pig4.addPig(1270,132);
-        Pig4.addDamage();
-
-        Pig2 = new Pig(stage,world,"king");
-        Pig2.addPig(1350,225+28+152+25);
-        Pig2.addDamage();
 
 
 
-        redBird1 = new RedBird(stage);
-        redBird1.getBirds(190,105);
-        blueBird = new BlueBird(stage);
-        blueBird.getBirds(150,105);
-        yellowBird = new YellowBird(stage);
-        yellowBird.getBirds(100,105);
-        blackBird = new BlackBird(stage);
-        blackBird.getBirds(50,105);
-        Catapult catapult = new Catapult(stage);
+        pig2 = new Pig(stage,world,"king");
+        pig2.addPig(1350,225+28+152+50,allPig);
+        pig2.addDamage();
+
+        catapult = new Catapult(stage);
         catapult.getCatapult();
+        stage.addActor(pause);
+        redBird = new RedBird(stage,world,viewport);
+        redBird.getBirds(190,105, allBirds);
+        redBird.launch();
+//
+        blueBird = new BlueBird(stage,world,viewport,allBirds);
+        blueBird.getBirds(150,105, allBirds);
+        blueBird.launch();
+        yellowBird = new YellowBird(stage,world,viewport);
+        yellowBird.getBirds(100,105, allBirds);
+        yellowBird.launch();
+//        blackBird = new BlackBird(stage,world,viewport);
+//        blackBird.getBirds(50,105, allBirds);
 
-        Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
+
         inputMultiplexer.addProcessor(this);
-
-
-
         Gdx.input.setInputProcessor(inputMultiplexer);
+
 
         pause.addListener(new InputListener() {
             @Override
@@ -218,68 +207,191 @@ public class Level2 implements Screen, InputProcessor {
             }
         });
 
+        debugRenderer = new Box2DDebugRenderer(
+            true, /* draw bodies */
+            false, /* don't draw joints */
+            true, /* draw aabbs */
+            true, /* draw inactive bodies */
+            false, /* don't draw velocities */
+            true /* draw contacts */);
+
+        b1 = new BlueBird(stage,world,viewport,new LinkedList<>());
+        b2 = new BlueBird(stage,world,viewport,new LinkedList<>());
 
 
     }
 
     @Override
     public void render(float v) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        world.step(1f, 3, 3);
-
+        camera.zoom = 1f;
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(background, 0, 0,1920,1200);
-        batch.draw(ground, 0, 0,1920,136);
-
-
+        batch.draw(background, 0, 0,1920/PPM,1000/PPM);
+        batch.draw(ground, 0, 0,1920/PPM,136/PPM);
         batch.end();
+        debugRenderer.render(world, camera.combined);
+
+        ArrayList<BirdInterface> allBirdsCopy = new ArrayList<>(allBirds);
+        for (BirdInterface b : allBirdsCopy) {
+            if (catapult.isEmpty()) {
+                BirdInterface topBird = allBirds.peek();
+                if (topBird != null && topBird.getHealth() >= 100 && topBird.getActionTime() == 0) {
+
+                    topBird.setPosition(272/PPM,240/PPM);
+                }
+                catapult.setEmpty(false);
+            }
+            if (b.getInAction() && b.getActionTime() < 5) {
+                b.setActionTime(b.getActionTime() + Gdx.graphics.getDeltaTime());
+                if (b.getActionTime() >= 5) {
+                    b.setCanDestory(true);
+                    b.setInAction(false);
+                    return;
+                }
+            }
+            b.updateImagePositionFromBody();
+            if (b.isCanDestory()) {
+                if (world.isLocked()) continue;
+                b.Attack();
+                b.setCanDestory(false);
+                allBirds.remove(b);
+                catapult.setEmpty(true);
+            }
 
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0,0,0,1);
-        drawHalfEllipse(318,270,width,height,90,180);
+            if (Gdx.input.isTouched() && b.getInAction() && b.getBird().getUserData() instanceof BlueBird) {
 
-        shapeRenderer.end();
+                if (!b.isUsePower()) {
 
-        batch.begin();
-        Pig1.updateImagePositionFromBody();
-        Pig2.updateImagePositionFromBody();
-        block1.updateImagePositionFromBody();
-        block2.updateImagePositionFromBody();
-        block3.updateImagePositionFromBody();
-        rock5.updateImagePositionFromBody();
-        rock6.updateImagePositionFromBody();
-        block7.updateImagePositionFromBody();
-        rock8.updateImagePositionFromBody();
-        rock9.updateImagePositionFromBody();
-        block10.updateImagePositionFromBody();
-        block11.updateImagePositionFromBody();
-        block12.updateImagePositionFromBody();
+                    b1.getBirds(b.getPosition().x*32 + 50,b.getPosition().y*32+ 50, new LinkedList<>());
+                    b2.getBirds(b.getPosition().x*32+ 50,b.getPosition().y*32+ 50, new LinkedList<>());
+                    b1.getBird().setGravityScale(1);
+                    b1.getBird().setLinearVelocity(b.getVelocity().scl(1,1.5f));
+                    b2.getBird().setLinearVelocity(b.getVelocity().scl(1,-1.5f));
+                    b2.getBird().setGravityScale(1);
+                    b1.setCanDestory(true);
+                    b2.setCanDestory(true);
+                    b.setUsePower(true);
+                }
 
-        batch.end();
+            }
+            else if (Gdx.input.isTouched() && b.getInAction()) {
+
+                if (!b.isUsePower()) {
+                    b.activateSuperPower();
+                    b.setUsePower(true);
+                }
+
+            }
+        }
+
+
+
+        if (!allBirds.contains(blueBird) && b1.isCanDestory()) {
+
+            if (!world.isLocked()) {
+                System.out.println("dele");
+                b1.Attack();
+                b1.setCanDestory(false);
+            }
+        }
+        if (!allBirds.contains(blueBird) && b2.isCanDestory()) {
+
+            if (!world.isLocked()) {
+                System.out.println("dele");
+                b2.Attack();
+                b2.setCanDestory(false);
+
+            }
+        }
+
+        ArrayList<Block> allBlockCopy = new ArrayList<>(allBlock);
+
+        for(Block b: allBlockCopy) {
+            b.updateImagePositionFromBody();
+            if (b.getCanDestroy()) {
+                if (world.isLocked()) continue;
+                world.destroyBody(b.getBlockBody());
+                catapult.setEmpty(true);
+                b.setCandestroy(false);
+                allBlock.remove(b);
+            }
+        }
+        ArrayList<Pig> allPigsCopy = new ArrayList<>(allPig);
+        for (Pig p : allPigsCopy) {
+            p.updateImagePositionFromBody();
+            if (p.isCanDestroy()) {
+                if (world.isLocked()) continue;
+                world.destroyBody(p.getBody());
+                block1.setCandestroy(false);
+                allPig.remove(p);
+            }
+        }
+
+        if (allPig.isEmpty()) {
+            if (!isWaiting) {
+                isWaiting = true;
+                waitTime = 0f;
+            } else {
+                waitTime += Gdx.graphics.getDeltaTime();
+                if (waitTime >= WAIT_DURATION) {
+                    score = ((12 - allBlock.size()) * 100) + (allBirds.size() * 200);
+                    System.out.println(score);
+                    main.setScreen(new Won(main, 1, score));
+                    return;
+                }
+            }
+        }
+
+
+        if (allBirds.isEmpty() && !allPig.isEmpty()) {
+            if (!isWaiting) {
+                isWaiting = true;
+                waitTime = 0f;
+            } else {
+                waitTime += Gdx.graphics.getDeltaTime();
+                if (waitTime >= WAIT_DURATION) {
+                    main.setScreen(new Loss(main, 1));
+                    return;
+                }
+            }
+        }
 
         stage.act();
         stage.draw();
-
         stage2.act();
         stage2.draw();
+        redBird.renderRope();
+        redBird.renderTrajectory();
+        blueBird.renderRope();
+        blueBird.renderTrajectory();
+        yellowBird.renderRope();
+        yellowBird.renderTrajectory();
+
+        if (b1.getBird() != null) {
+            b1.updateImagePositionFromBody();
+        }
+        if (b2.getBird() != null) {
+            b2.updateImagePositionFromBody();
+        }
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
             main.setScreen(new Won(main,2,0));
         }
-
         if(Gdx.input.isKeyPressed(Input.Keys.L)) {
             main.setScreen(new Loss(main,2));
         }
+        world.step(1/60f, 6, 2);
+
+
 
     }
 
     public Level2 getthis() {
         return this;
     }
-
 
     @Override
     public void resize(int i, int i1) {
@@ -331,8 +443,6 @@ public class Level2 implements Screen, InputProcessor {
 
     @Override
     public boolean touchUp(int i, int i1, int i2, int i3) {
-        width = 100;
-        height = 1;
         return false;
     }
 
@@ -343,51 +453,12 @@ public class Level2 implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
-        if (Math.abs((screenX - 275)) <= 45) {
-            System.out.println("touching");
-            isDragging = true;
-        }
-
         return true;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-
-        if (isDragging) {
-            float deltaX = Math.abs(screenX - ellipseCenter.x);
-            float deltaY = Math.abs(screenY - ellipseCenter.y);
-            width = deltaX + 50;
-            height = 20;
-
-            System.out.println("Dragged: " + deltaX + " " + deltaY);
-        }
-
-
-
         return true;
-    }
-    private void drawHalfEllipse(float cx, float cy, float width, float height, float startAngle, float sweepAngle) {
-        float angleStep = sweepAngle / 50;
-
-
-        for (float angle = startAngle; angle <= startAngle + sweepAngle; angle += angleStep) {
-            float rad = (float) Math.toRadians(angle);
-            float x = cx + (width / 2f) * (float) Math.cos(rad);
-            float y = cy + (height / 2f) * (float) Math.sin(rad);
-
-
-            if (angle > startAngle) {
-                float prevRad = (float) Math.toRadians(angle - angleStep);
-                float prevX = cx + (width / 2f) * (float) Math.cos(prevRad);
-                float prevY = cy + (height / 2f) * (float) Math.sin(prevRad);
-
-                shapeRenderer.line(prevX, prevY, x, y);
-
-
-            }
-        }
     }
 
     @Override

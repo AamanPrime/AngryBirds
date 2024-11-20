@@ -28,21 +28,22 @@ public class PauseMenu {
     private Level3 level3;
     private Level1 level1;
     private Level2 level2;
+    private final float PPM = 32f;
     public PauseMenu(Stage stage, Main main, Level3 level3, Stage stage2) {
         this.main = main;
         this.stage = stage;
         this.stage2 = stage2;
         this.level3 = level3;
-        play = new Image(new Texture("ui/play.png"));play.setScale(0.56f);play.setPosition(1090, 600);play.setVisible(false);
-        restart = new Image(new Texture("ui/restart.png"));restart.setScale(0.5f);restart.setPosition(720,600);restart.setVisible(false);
-        levels = new Image(new Texture("ui/menu.png"));levels.setScale(0.5f);levels.setPosition(900,600);levels.setVisible(false);
-        musicon = new Image(new Texture("ui/musicon.png"));musicon.setScale(0.6f);musicon.setPosition(800,500);musicon.setVisible(false);
-        musicoff = new Image(new Texture("ui/musicoff.png"));musicoff.setScale(0.6f);musicoff.setPosition(800,500);musicoff.setVisible(false);
-        soundon = new Image(new Texture("ui/soundon.png"));soundon.setScale(0.6f);soundon.setPosition(1000,500);soundon.setVisible(false);
-        soundoff = new Image(new Texture("ui/soundoff.png"));soundoff.setScale(0.6f);soundoff.setPosition(1000,500);soundoff.setVisible(false);
+        play = new Image(new Texture("ui/play.png"));play.setScale(0.56f);play.setPosition(1090/PPM, 600/PPM);play.setVisible(false);
+        restart = new Image(new Texture("ui/restart.png"));restart.setScale(0.5f);restart.setPosition(720/PPM,600/PPM);restart.setVisible(false);
+        levels = new Image(new Texture("ui/menu.png"));levels.setScale(0.5f);levels.setPosition(900/PPM,600/PPM);levels.setVisible(false);
+        musicon = new Image(new Texture("ui/musicon.png"));musicon.setScale(0.6f);musicon.setPosition(800/PPM,500/PPM);musicon.setVisible(false);
+        musicoff = new Image(new Texture("ui/musicoff.png"));musicoff.setScale(0.6f);musicoff.setPosition(800/PPM,500/PPM);musicoff.setVisible(false);
+        soundon = new Image(new Texture("ui/soundon.png"));soundon.setScale(0.6f);soundon.setPosition(1000/PPM,500/PPM);soundon.setVisible(false);
+        soundoff = new Image(new Texture("ui/soundoff.png"));soundoff.setScale(0.6f);soundoff.setPosition(1000/PPM,500/PPM);soundoff.setVisible(false);
         menu = new Image(new Texture("ui/pauseMenu.png"));menu.setVisible(false);
-        menu.setPosition(600,400);
-        menu.setScale(0.5f);
+        menu.setPosition(600/PPM,400/PPM);
+        menu.setScale(0.5f/PPM);
 
         musicoff.addListener(new InputListener() {
             @Override
@@ -139,16 +140,16 @@ public class PauseMenu {
         this.stage = stage;
         this.stage2 = stage2;
         this.level1 = level1;
-        play = new Image(new Texture("ui/play.png"));play.setScale(0.56f);play.setPosition(1090, 600);play.setVisible(false);
-        restart = new Image(new Texture("ui/restart.png"));restart.setScale(0.5f);restart.setPosition(720,600);restart.setVisible(false);
-        levels = new Image(new Texture("ui/menu.png"));levels.setScale(0.5f);levels.setPosition(900,600);levels.setVisible(false);
-        musicon = new Image(new Texture("ui/musicon.png"));musicon.setScale(0.6f);musicon.setPosition(800,500);musicon.setVisible(false);
-        musicoff = new Image(new Texture("ui/musicoff.png"));musicoff.setScale(0.6f);musicoff.setPosition(800,500);musicoff.setVisible(false);
-        soundon = new Image(new Texture("ui/soundon.png"));soundon.setScale(0.6f);soundon.setPosition(1000,500);soundon.setVisible(false);
-        soundoff = new Image(new Texture("ui/soundoff.png"));soundoff.setScale(0.6f);soundoff.setPosition(1000,500);soundoff.setVisible(false);
+        play = new Image(new Texture("ui/play.png"));play.setScale(0.56f/PPM);play.setPosition(1090/PPM, 600/PPM);play.setVisible(false);
+        restart = new Image(new Texture("ui/restart.png"));restart.setScale(0.5f/PPM);restart.setPosition(720/PPM,600/PPM);restart.setVisible(false);
+        levels = new Image(new Texture("ui/menu.png"));levels.setScale(0.5f/PPM);levels.setPosition(900/PPM,600/PPM);levels.setVisible(false);
+        musicon = new Image(new Texture("ui/musicon.png"));musicon.setScale(0.6f/PPM);musicon.setPosition(800/PPM,500/PPM);musicon.setVisible(false);
+        musicoff = new Image(new Texture("ui/musicoff.png"));musicoff.setScale(0.6f/PPM);musicoff.setPosition(800/PPM,500/PPM);musicoff.setVisible(false);
+        soundon = new Image(new Texture("ui/soundon.png"));soundon.setScale(0.6f/PPM);soundon.setPosition(1000/PPM,500/PPM);soundon.setVisible(false);
+        soundoff = new Image(new Texture("ui/soundoff.png"));soundoff.setScale(0.6f/PPM);soundoff.setPosition(1000/PPM,500/PPM);soundoff.setVisible(false);
         menu = new Image(new Texture("ui/pauseMenu.png"));menu.setVisible(false);
-        menu.setPosition(600,400);
-        menu.setScale(0.5f);
+        menu.setPosition(600/PPM,400/PPM);
+        menu.setScale(0.5f/PPM);
 
         musicoff.addListener(new InputListener() {
             @Override
@@ -251,16 +252,16 @@ public class PauseMenu {
         this.stage = stage;
         this.stage2 = stage2;
         this.level2 = level2;
-        play = new Image(new Texture("ui/play.png"));play.setScale(0.56f);play.setPosition(1090, 600);play.setVisible(false);
-        restart = new Image(new Texture("ui/restart.png"));restart.setScale(0.5f);restart.setPosition(720,600);restart.setVisible(false);
-        levels = new Image(new Texture("ui/menu.png"));levels.setScale(0.5f);levels.setPosition(900,600);levels.setVisible(false);
-        musicon = new Image(new Texture("ui/musicon.png"));musicon.setScale(0.6f);musicon.setPosition(800,500);musicon.setVisible(false);
-        musicoff = new Image(new Texture("ui/musicoff.png"));musicoff.setScale(0.6f);musicoff.setPosition(800,500);musicoff.setVisible(false);
-        soundon = new Image(new Texture("ui/soundon.png"));soundon.setScale(0.6f);soundon.setPosition(1000,500);soundon.setVisible(false);
-        soundoff = new Image(new Texture("ui/soundoff.png"));soundoff.setScale(0.6f);soundoff.setPosition(1000,500);soundoff.setVisible(false);
+        play = new Image(new Texture("ui/play.png"));play.setScale(0.56f/PPM);play.setPosition(1090/PPM, 600/PPM);play.setVisible(false);
+        restart = new Image(new Texture("ui/restart.png"));restart.setScale(0.5f/PPM);restart.setPosition(720/PPM,600/PPM);restart.setVisible(false);
+        levels = new Image(new Texture("ui/menu.png"));levels.setScale(0.5f/PPM);levels.setPosition(900/PPM,600/PPM);levels.setVisible(false);
+        musicon = new Image(new Texture("ui/musicon.png"));musicon.setScale(0.6f/PPM);musicon.setPosition(800/PPM,500/PPM);musicon.setVisible(false);
+        musicoff = new Image(new Texture("ui/musicoff.png"));musicoff.setScale(0.6f/PPM);musicoff.setPosition(800/PPM,500/PPM);musicoff.setVisible(false);
+        soundon = new Image(new Texture("ui/soundon.png"));soundon.setScale(0.6f/PPM);soundon.setPosition(1000/PPM,500/PPM);soundon.setVisible(false);
+        soundoff = new Image(new Texture("ui/soundoff.png"));soundoff.setScale(0.6f/PPM);soundoff.setPosition(1000/PPM,500/PPM);soundoff.setVisible(false);
         menu = new Image(new Texture("ui/pauseMenu.png"));menu.setVisible(false);
-        menu.setPosition(600,400);
-        menu.setScale(0.5f);
+        menu.setPosition(600/PPM,400/PPM);
+        menu.setScale(0.5f/PPM);
 
         musicoff.addListener(new InputListener() {
             @Override
@@ -361,9 +362,6 @@ public class PauseMenu {
 
 
     }
-
-
-
 
     public void show() {
         play.setVisible(true);

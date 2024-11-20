@@ -56,7 +56,6 @@ public class HomeScreen implements Screen {
     public void show() {
         camera = new OrthographicCamera();
         viewport = new StretchViewport(1920, 1000);
-
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/f.ttf"));

@@ -18,8 +18,8 @@ public class Lwjgl2Launcher {
     private static LwjglApplicationConfiguration getDefaultConfiguration() {
         LwjglApplicationConfiguration configuration = new LwjglApplicationConfiguration();
         configuration.title = "Angry Birds";
-        configuration.width = 1920;
-        configuration.height = 1200;
+        configuration.width = 540;
+        configuration.height = 600;
         //// This prevents a confusing error that would appear after exiting normally.
         configuration.forceExit = false;
 

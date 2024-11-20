@@ -17,6 +17,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
 import com.sampleproject.model.*;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Level3 implements Screen, InputProcessor {
 
     private World world;
@@ -72,10 +76,10 @@ public class Level3 implements Screen, InputProcessor {
     private Rock rock20;
     private Rock rock21;
     public Image pause;
-    private RedBird redBird1;
-    private YellowBird yellowBird;
-    private BlueBird blueBird;
-    private BlackBird blackBird;
+//    private RedBird redBird1;
+//    private YellowBird yellowBird;
+//    private BlueBird blueBird;
+//    private BlackBird blackBird;
     private Pig Pig3;
     private Pig Pig4;
     private Pig Pig5;
@@ -83,8 +87,10 @@ public class Level3 implements Screen, InputProcessor {
     private Pig Pig7;
     private Pig pig8;
     private Main main;
-
+    private ArrayList<Block> allBlock = new ArrayList<>();
+    private ArrayList<Rock> allRock = new ArrayList<>();
     public Music backgroundMusic;
+    private Queue<BirdInterface> allBirds = new LinkedList<>();
     public Level3(Main main) {
         this.main = main;
     }
@@ -93,18 +99,21 @@ public class Level3 implements Screen, InputProcessor {
     public void show() {
         world = new World(new Vector2(0, -9.8f), true);
         stage = new Stage();
-        camera = new OrthographicCamera();
+        camera = new OrthographicCamera(16,9);
+        camera.position.set(0, 0, 0);
+        camera.update();
         viewport = new FitViewport(1920, 1000, camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
         stage2 = new Stage(viewport, batch);
+
+
         ground = new Texture("angrybirds/ground.png");
         background = new Texture("ui/level3bg.png");
         pause = new Image(new Texture("ui/pause.png"));
         pause.setPosition(20, 900);
         pause.setScale(0.5f);
         stage.addActor(pause);
-
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/game.wav"));
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(0.5f);
@@ -131,187 +140,42 @@ public class Level3 implements Screen, InputProcessor {
         debugRenderer = new Box2DDebugRenderer();
 
         ///ground block
-        block1 = new Block(stage,2,world);
+        block1 = new Block(stage,2,world,allBlock);
         block1.addBlock(700,105,1200,25);
         block1.addDamage();
 
-        block2 = new Block(stage,1,world);
-        block2.addBlock(1402,128,40,101+52+25);
-        block2.addDamage();
-        block3 = new Block(stage,1,world);
-        block3.addBlock(1740,128,40,101+52+25);
-        block3.addDamage();
 
-        rock5 = new Rock(stage,1,world);
-        rock5.addRock(1502,132,25,97);
-        rock5.addDamage();
-        rock6 = new Rock(stage,1,world);
-        rock6.addRock(1640,132,25,97);
-        rock6.addDamage();
-        rock7 = new Rock(stage,1,world);
-        rock7.addRock(1502,132+97,1640-1502+25,25);
-        rock7.addDamage();
-
-        block7 = new Block(stage,0,world);
-        block7.addBlock(1402,125+28+152,1540-1202+40,28);
-        block7.addDamage();
-        rock8 = new Rock(stage,1,world);
-        rock8.addRock(1402,125+28+152+25,100,97);
-        rock8.addDamage();
-        rock9 = new Rock(stage,1,world);
-        rock9.addRock(1740-75,125+28+152+25,115,97);
-        rock9.addDamage();
-        block10 = new Block(stage,1,world);
-        block10.addBlock(1402+100,125+28+152+25,25,97);
-        block10.addDamage();
-        block11 = new Block(stage,1,world);
-        block11.addBlock(1740-100,125+28+152+25,25,97);
-        block11.addDamage();
-        block12 = new Block(stage,0,world);
-        block12.addBlock(1402,70+28+152+25+152,1540-1202+40,28);
-        block12.addDamage();
-        Pig2 = new Pig(stage,world,"king");
-        Pig2.addPig(1550,225+28+50+25);
-        Pig2.addDamage();
-        Pig3 = new Pig(stage,world,"normal");
-        Pig3.addPig(1550,132);
-        Pig3.addDamage();
-
-//---------------------------------------------------------------------------------------
-
-        block13 = new Block(stage,1,world);
-        block13.addBlock(802,128,40,101+52+25);
-        block13.addDamage();
-        block14 = new Block(stage,1,world);
-        block14.addBlock(1140,128,40,101+52+25);
-        block14.addDamage();
-
-        rock1 = new Rock(stage,1,world);
-        rock1.addRock(852,132,25,60);
-        rock1.addDamage();
-        rock2 = new Rock(stage,1,world);
-        rock2.addRock(942,132,25,60);
-        rock2.addDamage();
-        rock3 = new Rock(stage,1,world);
-        rock3.addRock(852,132+60,1640-1550+25,25);
-        rock3.addDamage();
-        Pig4 = new Pig(stage,world,"helmet");
-        Pig4.addPig(880,130);
-        Pig4.addDamage();
-
-        rock11 = new Rock(stage,1,world);
-        rock11.addRock(992,132,25,60);
-        rock11.addDamage();
-        rock12 = new Rock(stage,1,world);
-        rock12.addRock(1082,132,25,60);
-        rock12.addDamage();
-        rock13 = new Rock(stage,1,world);
-        rock13.addRock(992,132+60,1640-1550+25,25);
-        rock13.addDamage();
-        Pig5 = new Pig(stage,world,"helmet");
-        Pig5.addPig(1025,130);
-        Pig5.addDamage();
-
-        block15 = new Block(stage,0,world);
-        block15.addBlock(802,125+28+152,1540-1202+40,28);
-        block15.addDamage();
-        rock4 = new Rock(stage,1,world);
-        rock4.addRock(802,125+28+152+25,100,97);
-        rock4.addDamage();
-        rock10 = new Rock(stage,1,world);
-        rock10.addRock(1140-75,125+28+152+25,115,97);
-        rock10.addDamage();
-        block16 = new Block(stage,1,world);
-        block16.addBlock(802+100,125+28+152+25,25,97);
-        block16.addDamage();
-        block17 = new Block(stage,1,world);
-        block17.addBlock(1140-100,125+28+152+25,25,97);
-        block17.addDamage();
-        block18 = new Block(stage,0,world);
-        block18.addBlock(802,70+28+152+25+152,1540-1202+40,28);
-        block18.addDamage();
+//        Pig1 = new Pig(stage,world,"king");
+//        Pig1.addPig(500,800,al);
 
 
-        Pig1 = new Pig(stage,world,"king");
-        Pig1.addPig(950,255+28+50);
-        Pig1.addDamage();
-
-        //***************************
-
-        block19 = new Block(stage,1,world);
-        block19.addBlock(1102,70+28+152+25+152+28,40,101+52+25);
-        block19.addDamage();
-        block20 = new Block(stage,1,world);
-        block20.addBlock(1440,70+28+152+25+152+28,40,101+52+25);
-        block20.addDamage();
-
-        rock14 = new Rock(stage,0,world);
-        rock14.addRock(802+1540-1202+40,70+28+152+25+152,220,25);
-        rock14.addDamage();
-        block21 = new Block(stage,0,world);
-        block21.addBlock(802+300,70+28+152+25+152+28+28+152,1540-1202+40,28);
-        block21.addDamage();
-        rock20 = new Rock(stage,1,world);
-        rock20.addRock(802+300,70+28+152+25+152+28+28+152+25,100,97);
-        rock20.addDamage();
-        rock21 = new Rock(stage,1,world);
-        rock21.addRock(1140-75+300,70+28+152+25+152+28+28+152+25,115,97);
-        rock21.addDamage();
-        block22 = new Block(stage,1,world);
-        block22.addBlock(802+100+300,70+28+152+25+152+28+28+152+25,25,97);
-        block22.addDamage();
-        block23 = new Block(stage,1,world);
-        block23.addBlock(1140-100+300,70+28+152+25+152+28+28+152+25,25,97);
-        block23.addDamage();
-        block24 = new Block(stage,0,world);
-        block24.addBlock(802+300,70+28+152+25+152+28+152+152,1540-1202+40,28);
-        block24.addDamage();
 
 
-        TNT tnt1 = new TNT(stage,1025+210,70+28+152+25+152+28,world);
-        tnt1.addTNT();
-        Pig6 = new Pig(stage,world,"king");
-        Pig6.addPig(1025+220,tnt1.getY()+210);
-        Pig6.addDamage();
-        Pig7 = new Pig(stage,world,"normal");
-        Pig7.addPig(tnt1.getX()+20, tnt1.getY()+100);
-        Pig7.addDamage();
-        pig8 = new Pig(stage,world,"king");
-        pig8.addPig(tnt1.getX(),128);
-        pig8.addDamage();
-
-
-        redBird1 = new RedBird(stage);
-        redBird1.getBirds(190,105);
-        blueBird = new BlueBird(stage);
-        blueBird.getBirds(150,105);
-        yellowBird = new YellowBird(stage);
-        yellowBird.getBirds(100,105);
-        blackBird = new BlackBird(stage);
-        blackBird.getBirds(50,105);
+//        redBird1 = new RedBird(stage,world,viewport);
+//        redBird1.getBirds(190,105,allBirds);
+//        redBird1.launch();
+//        blueBird = new BlueBird(stage,world,viewport);
+//        blueBird.getBirds(150,105,allBirds);
+//        yellowBird = new YellowBird(stage,world,viewport);
+//        yellowBird.getBirds(100,105,allBirds);
+//        blackBird = new BlackBird(stage,world,viewport);
+//        blackBird.getBirds(50,105,allBirds);
         Catapult catapult = new Catapult(stage);
         catapult.getCatapult();
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
-        inputMultiplexer.addProcessor(this);
+//        inputMultiplexer.addProcessor(this);
 
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        pause.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                inputMultiplexer.removeProcessor(stage);
-                removethis();
-                inputMultiplexer.addProcessor(stage2);
-                backgroundMusic.stop();
-                pause.setVisible(false);
-                PauseMenu p = new PauseMenu(stage,main,getthis(),stage2);
-                p.show();
-                return true;
-            }
-        });
-
+        debugRenderer = new Box2DDebugRenderer(
+            true, /* draw bodies */
+            false, /* don't draw joints */
+            true, /* draw aabbs */
+            true, /* draw inactive bodies */
+            false, /* don't draw velocities */
+            true /* draw contacts */);
 
     }
 
@@ -320,74 +184,19 @@ public class Level3 implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        world.step(1f, 3, 3);
+        world.step(1/60f, 6, 2);
+        world.step(1/60f, 6, 2);
+        world.step(1/60f, 6, 2);
+        world.step(1/60f, 6, 2);
+        camera.update();
 
-        batch.begin();
-        batch.draw(background, 0, 0,1920,1200);
-        batch.draw(ground, 0, 0,1920,136);
+        debugRenderer.render(world, camera.combined);
 
-
-        batch.end();
-
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0,0,0,1);
-        drawHalfEllipse(318,270,width,height,90,180);
-
-        shapeRenderer.end();
-
-        batch.begin();
-        Pig1.updateImagePositionFromBody();
-        Pig2.updateImagePositionFromBody();
-        Pig3.updateImagePositionFromBody();
-        Pig4.updateImagePositionFromBody();
-        Pig5.updateImagePositionFromBody();
-        Pig6.updateImagePositionFromBody();
-        Pig7.updateImagePositionFromBody();
-        pig8.updateImagePositionFromBody();
-//        block1.updateImagePositionFromBody();
-//        block2.updateImagePositionFromBody();
-//        block3.updateImagePositionFromBody();
-//        block7.updateImagePositionFromBody();
-//        block10.updateImagePositionFromBody();
-//        block11.updateImagePositionFromBody();
-//        block12.updateImagePositionFromBody();
-//        block13.updateImagePositionFromBody();
-//        block14.updateImagePositionFromBody();
-//        block15.updateImagePositionFromBody();
-//        block16.updateImagePositionFromBody();
-//        block17.updateImagePositionFromBody();
-//        block18.updateImagePositionFromBody();
-//        block19.updateImagePositionFromBody();
-//        block20.updateImagePositionFromBody();
-//        block21.updateImagePositionFromBody();
-//        block22.updateImagePositionFromBody();
-//        block23.updateImagePositionFromBody();
-//        block24.updateImagePositionFromBody();
-//        rock1.updateImagePositionFromBody();
-//        rock2.updateImagePositionFromBody();
-//        rock3.updateImagePositionFromBody();
-//        rock4.updateImagePositionFromBody();
-//        rock5.updateImagePositionFromBody();
-//        rock6.updateImagePositionFromBody();
-//        rock7.updateImagePositionFromBody();
-//        rock8.updateImagePositionFromBody();
-//        rock9.updateImagePositionFromBody();
-//        rock10.updateImagePositionFromBody();
-//        rock11.updateImagePositionFromBody();
-//        rock12.updateImagePositionFromBody();
-//        rock13.updateImagePositionFromBody();
-//        rock14.updateImagePositionFromBody();
-//        rock20.updateImagePositionFromBody();
-//        rock21.updateImagePositionFromBody();
-
-        batch.end();
-
+//        Pig1.updateImagePositionFromBody();
+//        redBird1.updateImagePositionFromBody();
         stage.act();
         stage.draw();
 
-        stage2.act();
-        stage2.draw();
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
             main.setScreen(new Won(main,3,0));

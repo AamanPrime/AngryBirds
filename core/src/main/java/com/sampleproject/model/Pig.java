@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import java.util.ArrayList;
+
 import static java.lang.Thread.sleep;
 
 public class Pig {
@@ -17,13 +19,16 @@ public class Pig {
     private int health;
     private Stage stage;
     private Image pig;
-    private Image pigdead;
     private String type;
+    private boolean isCandestroy;
+
+    public final float PPM = 32f;
     public Pig(Stage stage, World world,String type) {
-        this.health = health;
+        this.health = 100;
         this.stage = stage;
         this.world = world;
         this.type = type;
+
     }
     public int getHealth() {
         return health;
@@ -32,61 +37,121 @@ public class Pig {
         this.health = health;
     }
 
-    public void addPig(int x,int y) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x, y);
-        body = world.createBody(bodyDef);
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(0.0185208333f, 0.0224895833f);  // 1x1 meter box
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 2.0f;  // Adjust for mass
-        fixtureDef.friction = 0.3f;
-        fixtureDef.restitution = 0.1f; // Bounciness
-        body.createFixture(fixtureDef);
+    public World getWorld() {
+        return world;
+    }
 
-        shape.dispose();
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
+    public Body getBody() {
+        return body;
+    }
+
+    public void setBody(Body body) {
+        this.body = body;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public Image getPig() {
+        return pig;
+    }
+
+    public void setPig(Image pig) {
+        this.pig = pig;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isCanDestroy() {
+        return isCandestroy;
+    }
+
+    public void setCanDestroy(boolean candestroy) {
+        isCandestroy = candestroy;
+    }
+
+    public float getPPM() {
+        return PPM;
+    }
+
+    public void addPig(int x, int y, ArrayList<Pig> pigs) {
+        x /= PPM;
+        y /= PPM;
         if (type.equals("king")) {
-            pig = new Image(new TextureRegion(new Texture("ui/all.png"),22,175,70,85));
+            pig = new Image(new TextureRegion(new Texture("ui/kings.png")));
+            pig.setSize(70/PPM,85/PPM);
         }
         else if (type.equals("helmet")) {
             pig = new Image(new TextureRegion(new Texture("ui/helmetpig.png")));
+            pig.setSize(70/PPM,85/PPM);
         }
         else {
             pig = new Image(new TextureRegion(new Texture("ui/normalpig.png")));
+            pig.setSize(70/PPM,85/PPM);
         }
-        pigdead = new Image(new Texture("ui/deadpig.png"));
-        pigdead.setSize(70,85);
         pig.setPosition(x,y);
-        pigdead.setPosition(x,y);
-        pigdead.setVisible(false);
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x+(35f/PPM), y+ (42.5f/PPM));
+        body = world.createBody(bodyDef);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(20/PPM);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.friction = 0.3f;
+        fixtureDef.density = 1.0f;
+        fixtureDef.restitution = 0.3f;
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
         stage.addActor(pig);
-        stage.addActor(pigdead);
+        body.setUserData(this);
+        pigs.add(this);
     }
 
     public void addDamage() {
         pig.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-
                 pig.remove();
-
-
-
                 return true;
             }
         });
     }
 
+    public void handleCollisionWithPig() {
+        health -= 100;
+        System.out.println("Pig collided! Health: " + health);
+
+        if (health <= 0) {
+            pig.remove();
+            this.isCandestroy = true;
+        }
+    }
+
     public void updateImagePositionFromBody() {
 
         Vector2 bodyPosition = body.getPosition();
-        float imageX = bodyPosition.x ;
-        float imageY = bodyPosition.y;
+        float imageX = bodyPosition.x - pig.getWidth() / 2;
+        float imageY = bodyPosition.y - pig.getHeight() / 3;
+
         pig.setPosition(imageX, imageY);
-        //   pig.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+
     }
 
 }

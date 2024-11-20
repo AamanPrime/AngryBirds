@@ -37,6 +37,7 @@ public class Won implements Screen {
     private Image restart;
     private Image forward;
     private Image bird;
+    private Image star;
     public Won(Main main,int level,int score) {
         this.main = main;
         this.level = level;
@@ -62,6 +63,37 @@ public class Won implements Screen {
         }
         dashboard = new Image(new Texture("ui/won.png"));
         restart = new Image(new Texture("ui/restart.png"));
+
+        star = new Image(new Texture("ui/stars.png"));
+        star.setPosition(790,650);
+        star.setScale(0.65f);
+        star.setVisible(false);
+
+        Image star2 = new Image(new Texture("ui/stars.png"));
+        star2.setScale(0.65f);
+        star2.setPosition(890,680);
+        star2.setVisible(false);
+
+        Image star3 = new Image(new Texture("ui/stars.png"));
+        star3.setScale(0.65f);
+        star3.setPosition(988,650);
+        star3.setVisible(false);
+
+        if (score >= 100 && score < 300) {
+            star.setVisible(true);
+        }
+        else if (score >= 300 && score < 500) {
+            star.setVisible(true);
+            star2.setVisible(true);
+        }
+        else if (score >= 500) {
+            star.setVisible(true);
+            star2.setVisible(true);
+            star3.setVisible(true);
+        }
+
+
+
         restart.setScale(0.5f);
         restart.setPosition(1080,140);
 
@@ -87,11 +119,18 @@ public class Won implements Screen {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         labelStyle.fontColor = new Color(255,255,255,1);
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter2 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter2.size = 50;
+        BitmapFont font2 = generator.generateFont(parameter2);
+        Label.LabelStyle labelStyle2 = new Label.LabelStyle();
+        labelStyle2.font = font2;
+        labelStyle2.fontColor = new Color(255,255,255,1);
+
 
         Label label = new Label("Level " + level, labelStyle);
-        Label scoreLabel = new Label(" " + score,labelStyle);
+        Label scoreLabel = new Label(" " + score,labelStyle2);
         label.setPosition(840, 810);
-        scoreLabel.setPosition(810,412);
+        scoreLabel.setPosition(900,425);
 
         levels.addListener(new InputListener() {
             @Override
@@ -171,7 +210,9 @@ public class Won implements Screen {
         stage.addActor(restart);
         stage.addActor(forward);
         stage.addActor(bird);
-
+        stage.addActor(star);
+        stage.addActor(star2);
+        stage.addActor(star3);
         Gdx.input.setInputProcessor(stage);
 
     }
