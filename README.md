@@ -15,7 +15,8 @@ The project is organized into the following main packages:
 # GUI Implementation
 
 The game features a visually appealing and responsive Graphical User Interface (GUI) designed using the LibGDX framework. The GUI serves as the backbone for user interaction, offering intuitive navigation and a seamless gameplay experience. Below are the key components and features of the GUI:
-
+## Game Saving loading
+- User can save and load his games if he is logged in at any point anytime.
 ## Screens Overview
 
 The game consists of multiple screens to facilitate different functionalities:
