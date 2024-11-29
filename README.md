@@ -182,6 +182,11 @@ The following JUnit tests have been implemented to ensure the proper functioning
 ### **3. Run**
 - Just click on the run(triangle) button above the main class to run the program.
 ---
+## **Bonus Implementation**
+### **Power Abilities of Bird**
+- Different birds can use their respective powerup when clicked on screen.
+### **Store usage and coin system**
+- User can use coins to buy different and better catapult to launch birds.
 
 # **OOPS Concepts Applied**
 
