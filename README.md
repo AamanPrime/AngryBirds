@@ -12,6 +12,73 @@ This project is an **Angry Birds** inspired game developed using **Java** and th
 ## **Project Structure**
 
 The project is organized into the following main packages:
+# GUI Implementation
+
+The game features a visually appealing and responsive Graphical User Interface (GUI) designed using the LibGDX framework. The GUI serves as the backbone for user interaction, offering intuitive navigation and a seamless gameplay experience. Below are the key components and features of the GUI:
+## Game Saving loading
+- User can save and load his games if he is logged in at any point anytime.
+## Screens Overview
+
+The game consists of multiple screens to facilitate different functionalities:
+
+### 1. Login Screen
+- Allows players to log in using their username and password.
+- Features a sleek background image, text input fields with placeholder text, and interactive buttons.
+- Error messages are displayed for invalid login attempts.
+- Transitions to the **Home Screen** upon successful login.
+
+### 2. Sign-Up Screen
+- Enables new users to register with a username and password.
+- Ensures that user input is validated before saving.
+- After registration, users are redirected to the **Home Screen**.
+
+### 3. Home Screen
+- Acts as the central hub for gameplay, level selection, and progress tracking.
+- Displays user-specific details such as the current level and total progress.
+- Interactive buttons provide navigation to various features, including settings, gameplay, and exit.
+
+### 4. Game Screen
+- Hosts the primary gameplay environment with dynamic components.
+- Integrates animations, textures, and interactive elements to enhance player engagement.
+
+### 5. Settings and Pause Screens
+- Offer customization options such as sound settings, controls, and game preferences.
+- Enable users to pause and resume gameplay seamlessly.
+
+## Visual Elements
+
+The GUI employs LibGDX's robust tools for rendering and interaction:
+
+- **Textures and Images**:
+  - High-quality background and button textures ensure a polished look.
+  - All assets are optimized for various screen resolutions.
+  
+- **Fonts and Labels**:
+  - Text rendering uses FreeType fonts for customizable, crisp, and scalable typography.
+  - Important messages, prompts, and labels are displayed using consistent styles.
+
+- **Scene2D UI Components**:
+  - Input fields, buttons, and labels are implemented using LibGDX's `Scene2D` API.
+  - Button hover and click animations provide visual feedback for user actions.
+
+## Interactivity
+
+- The GUI incorporates `InputListener` events to handle clicks, touches, and hover animations on buttons.
+- Navigation between screens is smooth and intuitive, ensuring an uninterrupted user experience.
+- Custom actions, such as scaling effects and transitions, are added for enhanced interactivity.
+
+## Serialization Support
+
+The game GUI supports saving and loading the complete game state, including:
+- The current screen and its components.
+- Player progress, level state, and any in-progress actions.
+
+This ensures that players can resume their gameplay from exactly where they left off.
+
+## Extensibility
+
+The GUI architecture is modular, making it easy to add or update screens and components in the future. Each screen is implemented as a separate class, adhering to LibGDX's `Screen` interface for maintainability.
+
 
 ### 1. **Core Code**:
 - **Exception Handling**:
@@ -79,6 +146,15 @@ The project is organized into the following main packages:
 - **Custom Exceptions**: The game includes custom exceptions (`GameNotFoundException` and `UnableToRestartGameException`) to handle errors gracefully, such as missing game states or failures in restarting.
 
 ---
+# JUnit Testing Overview
+
+The following JUnit tests have been implemented to ensure the proper functioning of the application's core features:
+
+- **Music Status Test**: Verifies that the music toggle functionality updates the application state correctly.
+- **Sound Status Test**: Ensures that enabling or disabling sound effects is properly reflected in the app settings.
+- **Difficulty Level Test**: Confirms that the selected difficulty level is saved and retrieved accurately.
+- **Username Validation Test**: Checks that the username is stored, retrieved, and validated correctly during login and registration processes.
+- **Username Invalidation Test**: Checks that the username stored and the one entered during login and registration processes are different i.e. the one which is entered is invalid.
 
 ## **Dependencies**
 
@@ -107,6 +183,11 @@ The project is organized into the following main packages:
 ### **3. Run**
 - Just click on the run(triangle) button above the main class to run the program.
 ---
+## **Bonus Implementation**
+### **Power Abilities of Bird**
+- Different birds can use their respective powerup when clicked on screen.
+### **Store usage and coin system**
+- User can use coins to buy different and better catapult to launch birds.
 
 # **OOPS Concepts Applied**
 
