@@ -14,10 +14,8 @@ public class Main extends Game implements Serializable {
 
     @Override
     public void create() {
-
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
-
-        setScreen(new HomeScreen(this,userManager.getUsers("default")));
+        setScreen(new StartingPage(this));
     }
 
 }
