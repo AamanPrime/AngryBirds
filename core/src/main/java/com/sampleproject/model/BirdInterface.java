@@ -45,5 +45,7 @@ public interface BirdInterface {
     Vector2 getVelocity();
 
     public Body getBird();
+    void renderRope();
+    void renderTrajectory();
 
 }

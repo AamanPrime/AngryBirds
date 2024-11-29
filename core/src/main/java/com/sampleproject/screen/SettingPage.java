@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
+import com.sampleproject.model.UserManager;
 
 public class SettingPage implements Screen {
     private OrthographicCamera camera;
@@ -28,8 +29,12 @@ public class SettingPage implements Screen {
     private Texture background;
     private Main main;
     private BitmapFont font;
-    public SettingPage(Main main) {
+    private UserManager.User user;
+    private UserManager userManager = new UserManager();
+    public SettingPage(Main main, UserManager.User user) {
         this.main = main;
+        this.user = user;
+        this.user = userManager.getUsers(user.getUsername());
     }
     @Override
     public void show() {
@@ -82,10 +87,11 @@ public class SettingPage implements Screen {
         easy.setPosition(1080,1000-680);
         easy.setFontScale(0.5f);
         easy.setVisible(false);
+
         difficulty.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+                userManager.setSetting("difficulty", user.getUsername());
                 difficulty.setVisible(false);
                 easy.setVisible(true);
                 return true;
@@ -94,14 +100,14 @@ public class SettingPage implements Screen {
         easy.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+                userManager.setSetting("difficulty", user.getUsername());
                 easy.setVisible(false);
                 difficulty.setVisible(true);
                 return true;
             }
         });
 
-        if (main.musicStatus) {
+        if (user.isMusicStatus()) {
             musicon.setVisible(true);
             musicoff.setVisible(false);
         }
@@ -110,7 +116,7 @@ public class SettingPage implements Screen {
             musicon.setVisible(false);
         }
 
-        if (main.soundStatus) {
+        if (user.isSoundStatus()) {
             soundon.setVisible(true);
             soundoff.setVisible(false);
         }
@@ -119,20 +125,29 @@ public class SettingPage implements Screen {
             soundon.setVisible(false);
         }
 
+        if (user.isDifficulty()) {
+            difficulty.setVisible(true);
+            easy.setVisible(false);
+        }
+        else {
+            difficulty.setVisible(false);
+            easy.setVisible(true);
+        }
+
         musicoff.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.musicStatus = true;
+                userManager.setSetting("music",user.getUsername());
                 musicon.setVisible(true);
                 musicoff.setVisible(false);
-
                 return true;
             }
         });
+
         musicon.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.musicStatus = false;
+                userManager.setSetting("music",user.getUsername());
                 musicon.setVisible(false);
                 musicoff.setVisible(true);
                 return true;
@@ -142,7 +157,7 @@ public class SettingPage implements Screen {
         soundoff.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.soundStatus = true;
+                userManager.setSetting("sound",user.getUsername());
                 soundon.setVisible(true);
                 soundoff.setVisible(false);
                 return true;
@@ -152,7 +167,7 @@ public class SettingPage implements Screen {
         soundon.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.soundStatus = false;
+                userManager.setSetting("sound",user.getUsername());
                 soundon.setVisible(false);
                 soundoff.setVisible(true);
                 return true;
@@ -162,7 +177,7 @@ public class SettingPage implements Screen {
         close.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new HomeScreen(main));
+                main.setScreen(new HomeScreen(main,user));
                 return true;
             }
             @Override
@@ -179,10 +194,6 @@ public class SettingPage implements Screen {
                 ));
             }
         });
-
-
-
-
 
         stage.addActor(close);
         stage.addActor(soundon);

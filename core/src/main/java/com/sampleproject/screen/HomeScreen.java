@@ -2,6 +2,7 @@ package com.sampleproject.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -33,14 +34,16 @@ public class HomeScreen implements Screen {
     private UserManager.User user = userManager.getUsers("default");
     private Label name;
     private BitmapFont font;
+    private Music backgroundMusic;
     public HomeScreen(Main main,UserManager.User user) {
         this.main = main;
-        this.user = user;
         if (user == null) {
             userManager.addUser(new UserManager.User("default","default"));
-            user = userManager.getUsers("default");
+            this.user = userManager.getUsers("default");
         }
-
+        if (user != null) {
+            this.user = userManager.getUsers(user.getUsername());
+        }
     }
     public HomeScreen(Main main) {
         this.main = main;
@@ -66,7 +69,10 @@ public class HomeScreen implements Screen {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         labelStyle.fontColor = Color.WHITE;
-
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/song.mp3"));
+        if (userManager.getSettings("music",user.getUsername())) {
+            backgroundMusic.play();
+        }
         background = new Texture("ui/homescreen.png");
         Image continueImage = new Image(new Texture("ui/continue.png"));
         Image selectlevel = new Image(new Texture("ui/selectlevel.png"));
@@ -96,7 +102,6 @@ public class HomeScreen implements Screen {
         storeicon.setScale(0.5f);
         storeicon.setPosition(50,130);
 
-
         setting.addListener(new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -114,7 +119,8 @@ public class HomeScreen implements Screen {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new SettingPage(main));
+                backgroundMusic.stop();
+                main.setScreen(new SettingPage(main,user));
                 return true;
             }
         });
@@ -159,6 +165,7 @@ public class HomeScreen implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 main.setScreen(new Login(main,homeScreen));
                 return true;
             }
@@ -178,6 +185,7 @@ public class HomeScreen implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 main.setScreen(new SignUp(main,homeScreen));
                 return true;
             }
@@ -197,6 +205,7 @@ public class HomeScreen implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 main.setScreen(new HomeScreen(main));
                 return true;
             }
@@ -216,11 +225,31 @@ public class HomeScreen implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new Levels(main,homeScreen));
+                backgroundMusic.stop();
+                if (user.getLevel1score() == 0) {
+                    Level1 temp = Level1.loadGame(user.getUsername() + "_level1.ser");
+                    System.out.println(user.getUsername());
+                    if (temp != null) {
+                        main.setScreen(new Level1(main,user,temp.getAllBlock(),temp.getAllRock(),temp.getAllPig(),temp.getAllBirds(),temp.getAllGlass()));
+                    }
+                    else {
+                    main.setScreen(new Level1(main,user));
+                    }
+                }
+                else if (user.getLevel2score() == 0) {
+                    main.setScreen(new Level2(main,user));
+                }
+                else if (user.getLevel3score() == 0) {
+                    main.setScreen(new Level3(main,user));
+                }
+                else {
+                    main.setScreen(new Levels(main,user));
+                }
                 return true;
             }
         });
         selectlevel.addListener(new InputListener() {
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 selectlevel.addAction(Actions.sequence(
@@ -235,7 +264,8 @@ public class HomeScreen implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new Levels(main,homeScreen));
+                backgroundMusic.stop();
+                main.setScreen(new Levels(main,user));
                 return true;
             }
         });
@@ -250,6 +280,7 @@ public class HomeScreen implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event,float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 main.setScreen(new Store(homeScreen,user,main));
                 return true;
             }
@@ -258,6 +289,7 @@ public class HomeScreen implements Screen {
         name.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event,float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 main.setScreen(new User(main,user));
                 return true;
             }

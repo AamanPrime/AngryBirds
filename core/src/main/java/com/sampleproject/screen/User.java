@@ -26,6 +26,7 @@ import com.sampleproject.Main;
 import com.sampleproject.model.UserManager;
 
 import java.awt.*;
+import java.io.File;
 
 public class User implements Screen {
 
@@ -37,9 +38,11 @@ public class User implements Screen {
     private SpriteBatch batch;
     private Main main;
     private UserManager.User user;
+    private UserManager userManager;
     public User(Main main,UserManager.User user) {
         this.main = main;
-        this.user = user;
+        this.userManager = new UserManager();
+        this.user = userManager.getUsers(user.getUsername().toLowerCase());
     }
     @Override
     public void show() {
@@ -96,10 +99,36 @@ public class User implements Screen {
             }
         });
 
+        submit.addListener(new InputListener() {
 
-        Label score = new Label("0000", labelStyle);
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                String oldName=  user.getUsername();
+                userManager.changeUserName(user.getUsername().toLowerCase(),newusername.getText().toLowerCase());
+                user = userManager.getUsers(newusername.getText().toLowerCase());
+                main.setScreen(new HomeScreen(main,user));
+                for (int i = 1; i <= 3; i++) {
+                    try {
+                        File originalFile = new File(oldName+"_level" + i + ".ser");
+                        File renamedFile = new File(user.getUsername()+"_level" + i + ".ser");
+
+                        if (originalFile.exists() && originalFile.renameTo(renamedFile)) {
+                            System.out.println("File renamed successfully!");
+                        } else {
+                            System.out.println("Error: File could not be renamed.");
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                return false;
+            }
+
+        });
+
+
+        Label score = new Label(user.getCoins()+"", labelStyle);
         score.setPosition(600,1000-340);
-
         stage.addActor(bg);
         stage.addActor(score);
         stage.addActor(newusername);

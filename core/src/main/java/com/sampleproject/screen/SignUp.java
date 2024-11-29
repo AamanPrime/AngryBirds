@@ -107,9 +107,8 @@ public class SignUp implements Screen {
                 String usernameText = username.getText();
                 String passwordText = password.getText();
                 UserManager userManager = new UserManager();
-                UserManager.User user = new UserManager.User(usernameText,passwordText);
+                UserManager.User user = new UserManager.User(usernameText.toLowerCase(),passwordText.toLowerCase());
                 userManager.addUser(user);
-
                 main.setScreen(new HomeScreen(main,user));
                 return false;
             }

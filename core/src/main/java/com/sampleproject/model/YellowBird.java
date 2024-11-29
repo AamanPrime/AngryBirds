@@ -3,6 +3,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -11,23 +12,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class YellowBird implements BirdInterface {
-
+public class YellowBird implements BirdInterface, Serializable {
+    private static final long serialVersionUID = 1L; // Add a serialVersionUID
     private int health = 100;
-    private Stage stage;
-    private  Body bird;
-    private BodyDef bodyDef;
-    private World world;
-    private Image birdImage;
+    private transient Stage stage;
+    private transient Body bird;
+    private transient BodyDef bodyDef;
+    private transient World world;
+    private transient Image birdImage;
     private Vector2 launchVector = new Vector2();
-    private Viewport viewport;
+    private transient Viewport viewport;
     private boolean canDestory = false;
     public final float PPM = 32f;
-    private ShapeRenderer shapeRenderer;
+    private transient ShapeRenderer shapeRenderer;
     private Vector2 catapultPosition = new Vector2(288 / PPM, 270 / PPM);
     private boolean isDragging;
     public float actionTime;
@@ -35,13 +37,22 @@ public class YellowBird implements BirdInterface {
     private final float timeStep = 0.1f;
     private final int maxSteps = 50;
     private List<Vector2> trajectoryPoints;
+    private Vector3 initialPosition = new Vector3();
+    private UserManager.User user;
+    private Vector2 currentVelocity = new Vector2();
+    private boolean usePower;
 
-    public YellowBird(Stage stage, World world, Viewport viewport) {
+    public YellowBird() {
+
+    }
+
+    public YellowBird(Stage stage, World world, Viewport viewport, UserManager.User user) {
         this.viewport = viewport;
         this.stage = stage;
         this.world = world;
         this.shapeRenderer = new ShapeRenderer(); // Initialize ShapeRenderer
         this.trajectoryPoints = new ArrayList<>();
+        this.user = user;
     }
     @Override
     public int getHealth() {
@@ -94,9 +105,10 @@ public class YellowBird implements BirdInterface {
 
     @Override
     public void activateSuperPower() {
+        if (!isUsePower()) {
+            bird.setLinearVelocity(bird.getLinearVelocity().x * 1.2f, bird.getLinearVelocity().y * 1.2f);
+        }
 
-        bird.setLinearVelocity(bird.getLinearVelocity().x * 1.2f, bird.getLinearVelocity().y * 1.2f);
-        System.out.println("Super POwer");
     }
 
     public Vector2 getPosition() {
@@ -114,7 +126,7 @@ public class YellowBird implements BirdInterface {
 
     @Override
     public void setUsePower(boolean usePower) {
-
+        this.usePower = usePower;
     }
 
     public boolean getInAction() {
@@ -139,6 +151,14 @@ public class YellowBird implements BirdInterface {
 
     public void setTrajectoryPoints(List<Vector2> trajectoryPoints) {
         this.trajectoryPoints = trajectoryPoints;
+    }
+
+    public Vector2 getCurrentVelocity() {
+        return currentVelocity;
+    }
+
+    public void setCurrentVelocity(Vector2 currentVelocity) {
+        this.currentVelocity = currentVelocity;
     }
 
     public Stage getStage() {
@@ -197,6 +217,14 @@ public class YellowBird implements BirdInterface {
         this.canDestory = canDestory;
     }
 
+    public Vector3 getInitialPosition() {
+        return initialPosition;
+    }
+
+    public void setInitialPosition(Vector3 initialPosition) {
+        this.initialPosition = initialPosition;
+    }
+
     public void setVelocity(float x, float y) {
         bird.setLinearVelocity(x, y);
     }
@@ -215,7 +243,6 @@ public class YellowBird implements BirdInterface {
     public void getBirds(float x, float y, Queue<BirdInterface> allBirds) {
         x/=PPM;
         y/=PPM;
-        System.out.println(world.getGravity());
         birdImage = new Image(new Texture("ui/yellowbird.png"));
         birdImage.setPosition(x, y);
         birdImage.setSize(45/PPM,45/PPM);
@@ -303,15 +330,13 @@ public class YellowBird implements BirdInterface {
     }
 
     public void updateImagePositionFromBody() {
-        // Get the current position of the Box2D body
-        Vector2 bodyPosition = bird.getPosition();
 
-        // Convert the body position from meters to pixels
+        Vector2 bodyPosition = bird.getPosition();
         float imageX = bodyPosition.x  - birdImage.getWidth() / 2; // Center the image horizontally
         float imageY = bodyPosition.y  - birdImage.getHeight() / 2; // Center the image vertically
-
-        // Update the position of the bird image
         birdImage.setPosition(imageX, imageY);
+        setInitialPosition(new Vector3(imageX,imageY,0));
+        setCurrentVelocity(bird.getLinearVelocity());
     }
 
     private void calculateTrajectory(Vector2 initialVelocity) {

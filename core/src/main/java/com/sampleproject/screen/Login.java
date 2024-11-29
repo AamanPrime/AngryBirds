@@ -51,8 +51,6 @@ public class Login implements Screen {
     }
     public Login(Main main) {
         this.main = main;
-
-
     }
 
     @Override
@@ -124,9 +122,7 @@ public class Login implements Screen {
                 UserManager userManager = new UserManager();
                 UserManager.User user = userManager.getUsers(usernameText);
                 if (user != null && user.getPassword().equalsIgnoreCase(passwordText)) {
-
                     main.setScreen(new HomeScreen(main,user));
-
                 }
                 else {
                     main.setScreen(new Login(main,homeScreen,"Error username or password"));

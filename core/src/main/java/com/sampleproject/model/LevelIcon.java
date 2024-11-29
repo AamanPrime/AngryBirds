@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 public class LevelIcon {
 
 
-    private Stage stage;
+    private transient Stage stage;
     public LevelIcon(Stage stage) {
         this.stage = stage;
     }
@@ -54,24 +54,24 @@ public class LevelIcon {
 
 
 
-        image.addListener(new InputListener() {
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                image.setScale(0.31f);
-                star1.setScale(0.31f);
-                star2.setScale(0.31f);
-                star3.setScale(0.31f);
-                level.setPosition(level.getX()+3, level.getY()+3);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                image.setScale(0.3f);
-                star1.setScale(0.3f);
-                star2.setScale(0.3f);
-                star3.setScale(0.3f);
-                level.setPosition(level.getX()-3, level.getY()-3);
-            }
-        });
+//        image.addListener(new InputListener() {
+//            @Override
+//            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                image.setScale(0.31f);
+//                star1.setScale(0.31f);
+//                star2.setScale(0.31f);
+//                star3.setScale(0.31f);
+//                level.setPosition(level.getX()+3, level.getY()+3);
+//            }
+//            @Override
+//            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                image.setScale(0.3f);
+//                star1.setScale(0.3f);
+//                star2.setScale(0.3f);
+//                star3.setScale(0.3f);
+//                level.setPosition(level.getX()-3, level.getY()-3);
+//            }
+//        });
 
         stage.addActor(image);
         stage.addActor(level);

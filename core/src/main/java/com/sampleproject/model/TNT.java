@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class TNT {
 
-    private Stage stage;
+    private transient Stage stage;
     private Image image;
     int x;
     int y;

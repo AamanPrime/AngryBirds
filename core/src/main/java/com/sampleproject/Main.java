@@ -1,19 +1,23 @@
 package com.sampleproject;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.sampleproject.model.UserManager;
 import com.sampleproject.screen.*;
 
-public class Main extends Game {
-    public boolean musicStatus = false;
-    public boolean soundStatus = false;
+import java.io.Serializable;
+
+public class Main extends Game implements Serializable {
+    UserManager userManager = new UserManager();
+
     @Override
     public void create() {
+
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        setScreen(new Level1(this));
 
-
+        setScreen(new HomeScreen(this,userManager.getUsers("default")));
     }
 
 }

@@ -32,9 +32,10 @@ public class Store implements Screen {
     private HomeScreen homeScreen;
     private UserManager.User user;
     private Main main;
+    private UserManager userManager = new UserManager();
     public Store(HomeScreen homeScreen, UserManager.User user, Main main) {
         this.homeScreen = homeScreen;
-        this.user = user;
+        this.user = userManager.getUsers(user.getUsername());
         this.main = main;
     }
 
@@ -59,6 +60,25 @@ public class Store implements Screen {
         back.setSize(80,80);
         back.setPosition(50,50);
 
+        String type = user.getCatatype();
+        switch (type) {
+            case "normal":
+                stonepricebutton.setVisible(true);
+                woodepricebutton.setVisible(true);
+                goldenpricebutton.setVisible(true);
+                break;
+            case "golden":
+                goldenpricebutton.setVisible(false);
+                break;
+
+            case "rock":
+                stonepricebutton.setVisible(false);
+                break;
+
+            case "leaf":
+                woodepricebutton.setVisible(false);
+        }
+
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/f.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -79,11 +99,22 @@ public class Store implements Screen {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 stonepricebutton.addAction(Actions.sequence(Actions.scaleTo(1.1f,1.1f,0.2f)));
-
             }
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 stonepricebutton.addAction(Actions.sequence(Actions.scaleTo(1f,1f,0.2f)));
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (user.getCoins() < 199) {
+                    return true;
+                }
+                userManager.addCoins(-199,user.getUsername());
+                userManager.changeCatapult(user.getUsername(),"rock");
+                stonepricebutton.setVisible(false);
+                woodepricebutton.setVisible(true);
+                goldenpricebutton.setVisible(true);
+                return true;
             }
         });
         woodepricebutton.addListener(new InputListener() {
@@ -96,6 +127,18 @@ public class Store implements Screen {
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 woodepricebutton.addAction(Actions.sequence(Actions.scaleTo(1f,1f,0.2f)));
             }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (user.getCoins() < 0) {
+                    return true;
+                }
+                userManager.addCoins(-199,user.getUsername());
+                userManager.changeCatapult(user.getUsername(),"leaf");
+                stonepricebutton.setVisible(true);
+                woodepricebutton.setVisible(false);
+                goldenpricebutton.setVisible(true);
+                return true;
+            }
         });
         goldenpricebutton.addListener(new InputListener() {
             @Override
@@ -106,6 +149,18 @@ public class Store implements Screen {
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 goldenpricebutton.addAction(Actions.sequence(Actions.scaleTo(1f,1f,0.2f)));
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (user.getCoins() < 0) {
+                    return true;
+                }
+                userManager.addCoins(-199,user.getUsername());
+                userManager.changeCatapult(user.getUsername(),"golden");
+                stonepricebutton.setVisible(true);
+                woodepricebutton.setVisible(true);
+                goldenpricebutton.setVisible(false);
+                return true;
             }
         });
         back.addListener(new InputListener() {

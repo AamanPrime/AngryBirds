@@ -14,11 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
-public class Rock implements Serializable {
+public class Glass implements Serializable {
     private static final long serialVersionUID = 1L; // Add a serialVersionUID
     private transient Stage stage;
-    private int health = 200;
+    private int health = 182;
     private transient Image rectangle;
     private int orientation;
     private transient World world;
@@ -32,7 +31,7 @@ public class Rock implements Serializable {
     public float width;
     public float height;
     public float angle;
-    public Rock() {
+    public Glass() {
 
     }
 
@@ -76,11 +75,11 @@ public class Rock implements Serializable {
         this.world = world;
     }
 
-    public Body getRockBody() {
+    public Body getGlassBody() {
         return blockBody;
     }
 
-    public void setRockBody(Body blockBody) {
+    public void setGlassBody(Body blockBody) {
         this.blockBody = blockBody;
     }
 
@@ -93,11 +92,11 @@ public class Rock implements Serializable {
     }
 
 
-    public Rock(Stage stage,int orientation, World world,ArrayList<Rock> allRock) {
+    public Glass(Stage stage,int orientation, World world,ArrayList<Glass> allGlass) {
         this.stage = stage;
         this.orientation = orientation;
         this.world = world;
-        allRock.add(this);
+        allGlass.add(this);
     }
 
     public boolean getCanDestroy() {
@@ -122,7 +121,7 @@ public class Rock implements Serializable {
         this.initialPosition = initialPosition;
     }
 
-    public void addRock(float x, float y, float width, float height) {
+    public void addGlass(float x, float y, float width, float height) {
         this.width = width;
         this.height = height;
         x = x/PPM;
@@ -144,9 +143,9 @@ public class Rock implements Serializable {
 
         groundFixtureDef = new FixtureDef();
         groundFixtureDef.shape = blockShape;
-        groundFixtureDef.density = 1.5f;
+        groundFixtureDef.density = 1f;
 
-        groundFixtureDef.friction = 0.6f;
+        groundFixtureDef.friction = 0.3f;
         groundFixtureDef.restitution = 0f;
 
         blockBody.createFixture(groundFixtureDef);
@@ -155,24 +154,24 @@ public class Rock implements Serializable {
 
         if (orientation == 0) {
             if (health >= 20) {
-                addNewHorizontalRock(x,y,width,height);
+                addNewHorizontalGlass(x,y,width,height);
             }
             else {
-                addOldHorizontalRock(x,y,width,height);
+                addOldHorizontalGlass(x,y,width,height);
             }
         }
         else {
             if (health >= 20) {
-                addNewVerticalRock(x,y,width,height);
+                addNewVerticalGlass(x,y,width,height);
             }
             else {
-                addOldVerticalRock(x,y,width,height);
+                addOldVerticalGlass(x,y,width,height);
             }
         }
         blockBody.setUserData(this);
     }
 
-    public void addRock(float x, float y, float width, float height, float angle) {
+    public void addGlass(float x, float y, float width, float height, float angle) {
         this.width = width;
         this.height = height;
         x = x/PPM;
@@ -195,9 +194,9 @@ public class Rock implements Serializable {
 
         groundFixtureDef = new FixtureDef();
         groundFixtureDef.shape = blockShape;
-        groundFixtureDef.density = 1.5f;
+        groundFixtureDef.density = 1f;
 
-        groundFixtureDef.friction = 0.6f;
+        groundFixtureDef.friction = 0.3f;
         groundFixtureDef.restitution = 0f;
 
         blockBody.createFixture(groundFixtureDef);
@@ -206,49 +205,49 @@ public class Rock implements Serializable {
 
         if (orientation == 0) {
             if (health >= 20) {
-                addNewHorizontalRock(x,y,width,height);
+                addNewHorizontalGlass(x,y,width,height);
             }
             else {
-                addOldHorizontalRock(x,y,width,height);
+                addOldHorizontalGlass(x,y,width,height);
             }
         }
         else {
             if (health >= 20) {
-                addNewVerticalRock(x,y,width,height);
+                addNewVerticalGlass(x,y,width,height);
             }
             else {
-                addOldVerticalRock(x,y,width,height);
+                addOldVerticalGlass(x,y,width,height);
             }
         }
         blockBody.setUserData(this);
     }
 
-    public void addNewVerticalRock(float x, float y, float width, float height) {
-        rectangle = new Image(new Texture("ui/verticalRockNew.png"));
+    public void addNewVerticalGlass(float x, float y, float width, float height) {
+        rectangle = new Image(new Texture("ui/verticalGlass.png"));
         rectangle.setPosition(x, y);
         rectangle.setAlign(15);
         rectangle.setSize(width, height);
         stage.addActor(rectangle);
     }
 
-    public void addOldVerticalRock(float x, float y, float width, float height) {
-        rectangle = new Image(new Texture("ui/verticalRockOld.png"));
+    public void addOldVerticalGlass(float x, float y, float width, float height) {
+        rectangle = new Image(new Texture("ui/verticalGlass.png"));
         rectangle.setPosition(x, y);
         rectangle.setSize(width, height);
         stage.addActor(rectangle);
     }
 
 
-    public void addNewHorizontalRock(float x, float y, float width, float height) {
-        rectangle = new Image(new Texture("ui/horizontalRockNew.png"));
+    public void addNewHorizontalGlass(float x, float y, float width, float height) {
+        rectangle = new Image(new Texture("ui/horizontalGlass.png"));
         rectangle.setSize(width, height);
         rectangle.setPosition(x, y);
         stage.addActor(rectangle);
 
     }
 
-    public void addOldHorizontalRock(float x, float y, float width, float height) {
-        rectangle = new Image(new Texture("ui/horizontalRockOld.png"));
+    public void addOldHorizontalGlass(float x, float y, float width, float height) {
+        rectangle = new Image(new Texture("ui/horizontalGlass.png"));
         rectangle.setSize(width, height);
         rectangle.setPosition(x, y);
         stage.addActor(rectangle);
@@ -268,10 +267,10 @@ public class Rock implements Serializable {
                 }
                 else if (health <= 100) {
                     if (orientation == 0) {
-                        rectangle.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("ui/horizontalRockOld.png"))));
+                        rectangle.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("ui/horizontalGlass.png"))));
                     }
                     else {
-                        rectangle.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("ui/verticalRockOld.png"))));
+                        rectangle.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("ui/verticalGlass.png"))));
                     }
 
                 }
@@ -286,10 +285,10 @@ public class Rock implements Serializable {
         }
         else if (health <= 100) {
             if (orientation == 0) {
-                rectangle.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("ui/horizontalRockOld.png"))));
+                rectangle.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("ui/horizontalGlass.png"))));
             }
             else {
-                rectangle.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("ui/verticalRockOld.png"))));
+                rectangle.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("ui/verticalGlass.png"))));
             }
         }
     }

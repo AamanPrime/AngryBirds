@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
+import com.sampleproject.model.UserManager;
 
 public class Won implements Screen {
     private Main main;
@@ -38,10 +39,15 @@ public class Won implements Screen {
     private Image forward;
     private Image bird;
     private Image star;
-    public Won(Main main,int level,int score) {
+    private UserManager.User user;
+    private UserManager userManager;
+    public Won(Main main,int level,int score, UserManager.User user) {
         this.main = main;
         this.level = level;
         this.score = score;
+        this.user = user;
+        this.userManager = new UserManager();
+        userManager.addCoins(score,user.getUsername().toLowerCase());
     }
     @Override
     public void show() {
@@ -143,7 +149,7 @@ public class Won implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new Levels(main));
+                main.setScreen(new Levels(main,user));
                 return false;
             }
         });
@@ -160,13 +166,13 @@ public class Won implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (level == 1) {
-                    main.setScreen(new Level1(main));
+                    main.setScreen(new Level1(main,user));
                 }
                 else if (level == 2) {
-                    main.setScreen(new Level2(main));
+                    main.setScreen(new Level2(main,user));
                 }
                 else {
-                    main.setScreen(new Level3(main));
+                    main.setScreen(new Level3(main,user));
                 }
 
                 return false;
@@ -185,13 +191,13 @@ public class Won implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (level == 1) {
-                    main.setScreen(new Level2(main));
+                    main.setScreen(new Level2(main,user));
                 }
                 else if (level == 2) {
-                    main.setScreen(new Level3(main));
+                    main.setScreen(new Level3(main,user));
                 }
                 else {
-                    main.setScreen(new HomeScreen(main));
+                    main.setScreen(new HomeScreen(main,user));
                 }
 
                 return false;
@@ -214,14 +220,27 @@ public class Won implements Screen {
         stage.addActor(star2);
         stage.addActor(star3);
         Gdx.input.setInputProcessor(stage);
-
+        int initialHighscore = 0;
+        switch (level) {
+            case 1:
+                initialHighscore = user.getLevel1score();
+                break;
+            case 2:
+                initialHighscore = user.getLevel2score();
+                break;
+            case 3:
+                initialHighscore = user.getLevel3score();
+                break;
+        }
+        if (score > initialHighscore) {
+            userManager.updateUserScore(level, score, user.getUsername().toLowerCase());
+        }
     }
 
     @Override
     public void render(float v) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 
         stage.act();
         stage.draw();

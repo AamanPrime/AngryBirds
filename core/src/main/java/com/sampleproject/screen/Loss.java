@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampleproject.Main;
+import com.sampleproject.model.UserManager;
 
 public class Loss implements Screen {
 
@@ -29,9 +30,10 @@ public class Loss implements Screen {
     private SpriteBatch batch;
     private Viewport viewport;
     int level;
-    public Loss(Main main, int level) {
+    private UserManager.User user;
+    public Loss(Main main, int level, UserManager.User user) {
         this.main = main;
-
+        this.user = user;
         this.level = level;
     }
 
@@ -76,7 +78,7 @@ public class Loss implements Screen {
             }
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                main.setScreen(new Levels(main));
+                main.setScreen(new Levels(main,user));
                 return false;
             }
         });
@@ -93,13 +95,13 @@ public class Loss implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (level == 1) {
-                    main.setScreen(new Level1(main));
+                    main.setScreen(new Level1(main,user));
                 }
                 else if (level == 2) {
-                    main.setScreen(new Level2(main));
+                    main.setScreen(new Level2(main,user));
                 }
                 else {
-                    main.setScreen(new Level3(main));
+                    main.setScreen(new Level3(main,user));
                 }
 
                 return false;

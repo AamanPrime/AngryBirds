@@ -1,8 +1,11 @@
 package com.sampleproject.model;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -11,23 +14,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class RedBird implements BirdInterface {
-
-    private int health = 100;
-    private Stage stage;
-    private  Body bird;
-    private BodyDef bodyDef;
-    private World world;
-    private Image birdImage;
+public class RedBird implements BirdInterface, Serializable {
+    private static final long serialVersionUID = 1L; // Add a serialVersionUID
+    private int health = 120;
+    private transient Stage stage;
+    private transient Body bird;
+    private transient BodyDef bodyDef;
+    private transient World world;
+    private transient Image birdImage;
     private Vector2 launchVector = new Vector2();
-    private Viewport viewport;
+    private transient Viewport viewport;
     private boolean canDestory = false;
     public final float PPM = 32f;
-    private ShapeRenderer shapeRenderer;
+    private transient ShapeRenderer shapeRenderer;
     private Vector2 catapultPosition = new Vector2(288 / PPM, 270 / PPM);
     private boolean isDragging;
     public float actionTime;
@@ -35,14 +39,34 @@ public class RedBird implements BirdInterface {
     private final float timeStep = 0.1f;
     private final int maxSteps = 50;
     private List<Vector2> trajectoryPoints;
+    private UserManager.User user;
+    transient FixtureDef fixtureDef;
+    transient Music m = Gdx.audio.newMusic(Gdx.files.internal("sounds/Slingshot_Stretche.mp3"));
+    private Vector3 initialPosition = new Vector3();
+    private Vector2 currentVelocity = new Vector2();
+    private boolean usePower;
 
-    public RedBird(Stage stage, World world, Viewport viewport) {
+    public RedBird() {
+
+    }
+
+    public RedBird(Stage stage, World world, Viewport viewport, UserManager.User user) {
         this.viewport = viewport;
         this.stage = stage;
         this.world = world;
         this.shapeRenderer = new ShapeRenderer(); // Initialize ShapeRenderer
         this.trajectoryPoints = new ArrayList<>();
+        this.user = user;
     }
+
+    public Vector2 getCurrentVelocity() {
+        return currentVelocity;
+    }
+
+    public void setCurrentVelocity(Vector2 currentVelocity) {
+        this.currentVelocity = currentVelocity;
+    }
+
     @Override
     public int getHealth() {
         return health;
@@ -50,6 +74,14 @@ public class RedBird implements BirdInterface {
 
     public BodyDef getBodyDef() {
         return bodyDef;
+    }
+
+    public Vector3 getInitialPosition() {
+        return initialPosition;
+    }
+
+    public void setInitialPosition(Vector3 initialPosition) {
+        this.initialPosition = initialPosition;
     }
 
     public void setBodyDef(BodyDef bodyDef) {
@@ -94,7 +126,20 @@ public class RedBird implements BirdInterface {
 
     @Override
     public void activateSuperPower() {
-
+     if (!isUsePower()) {
+         CircleShape shape = new CircleShape();
+         shape.setRadius(20 / PPM);
+         FixtureDef fixtureDef = new FixtureDef();
+         fixtureDef.shape = shape;
+         fixtureDef.density = 0.05f;
+         fixtureDef.restitution = 0.3f;
+         fixtureDef.friction = 1f;
+         bird.createFixture(fixtureDef);
+         birdImage.setSize(60 / PPM, 60 / PPM);
+         shape.dispose();
+         System.out.println("Super Power");
+         setUsePower(true);
+     }
     }
 
     public Vector2 getPosition() {
@@ -112,7 +157,7 @@ public class RedBird implements BirdInterface {
 
     @Override
     public void setUsePower(boolean usePower) {
-
+        this.usePower = usePower;
     }
 
     public boolean getInAction() {
@@ -223,7 +268,7 @@ public class RedBird implements BirdInterface {
         bird = world.createBody(bodyDef);
         CircleShape shape = new CircleShape();
         shape.setRadius(20/PPM);
-        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
         fixtureDef.restitution = 0.3f;
@@ -250,12 +295,17 @@ public class RedBird implements BirdInterface {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 bird.setGravityScale(0); // Disable gravity while dragging
+
                 return true; // Start dragging
+
             }
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 isDragging = true;
+                if (user.isSoundStatus()) {
+                    m.play();
+                }
                 Vector2 touchPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
                 viewport.unproject(touchPosition);
                 dragVector = touchPosition.cpy().sub(catapultPosition);
@@ -269,19 +319,22 @@ public class RedBird implements BirdInterface {
                     catapultPosition.y + dragVector.y - birdImage.getHeight() / 2);
                 bird.setTransform(catapultPosition.x + dragVector.x, catapultPosition.y + dragVector.y, 0);
                 // Calculate and update the trajectory points
-                calculateTrajectory(dragVector.cpy().scl(-360f / PPM));
+                calculateTrajectory(dragVector.cpy().scl(-360f / PPM).scl(1.3f));
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 isDragging = false;
+                if (user.isSoundStatus()) {
+                    m.stop();
+                }
                 inaction = true;
                 bird.setAwake(true);
                 bird.setGravityScale(1);
 
                 Vector2 launchVector = dragVector.cpy().scl(-360f / PPM); // Adjust the scale of the launch vector to control the launch power
                 System.out.println(launchVector);
-                bird.applyLinearImpulse(launchVector.scl(1f), bird.getWorldCenter(), true); // Apply impulse
+                bird.applyLinearImpulse(launchVector.scl(1.3f), bird.getWorldCenter(), true); // Apply impulse
                 trajectoryPoints.clear();
             }
         });
@@ -294,22 +347,19 @@ public class RedBird implements BirdInterface {
         }
         shapeRenderer.setProjectionMatrix(stage.getCamera().combined); // Match the stage's projection
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(1, 0, 0, 1); // Red color for the rope
+        shapeRenderer.setColor(0, 0, 0, 1); // Red color for the rope
         shapeRenderer.line(catapultPoint, new Vector2(bird.getPosition().x,bird.getPosition().y+20/PPM)); // Draw line from catapult to bird
         shapeRenderer.line(new Vector2(catapultPoint.x-25/PPM,catapultPoint.y-30/PPM), new Vector2(bird.getPosition().x,bird.getPosition().y-23/PPM)); // Draw line from catapult to bird
         shapeRenderer.end();
     }
 
     public void updateImagePositionFromBody() {
-        // Get the current position of the Box2D body
         Vector2 bodyPosition = bird.getPosition();
-
-        // Convert the body position from meters to pixels
-        float imageX = bodyPosition.x  - birdImage.getWidth() / 2; // Center the image horizontally
-        float imageY = bodyPosition.y  - birdImage.getHeight() / 2; // Center the image vertically
-
-        // Update the position of the bird image
+        float imageX = bodyPosition.x  - birdImage.getWidth() / 2;
+        float imageY = bodyPosition.y  - birdImage.getHeight() / 2;
         birdImage.setPosition(imageX, imageY);
+        setInitialPosition(new Vector3(imageX,imageY,0));
+        setCurrentVelocity(bird.getLinearVelocity());
     }
 
     private void calculateTrajectory(Vector2 initialVelocity) {
